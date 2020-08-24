@@ -1,0 +1,35 @@
+body
+{
+    background-color: rgb(241, 241, 241);
+}
+div.loginHeader{
+    background-color: white;
+    border: 5px ridge;
+    height: 150px;
+    width: 720px;
+}
+.loginHeader h1{
+    padding-top: 0.75in;
+    font-size: 24pt;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    text-indent: 10px;
+}
+.login table{
+    font-size: 12pt;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    height: 1in;
+}
+table{
+    border: 1px solid black;
+}
+td.submit{
+    text-align: center;
+    width: 1in;
+}
+div.login{
+    float: left;
+    clear: right;
+}
+.logo{
+    float: left;
+}

@@ -2,9 +2,31 @@
 <html>
 <head>
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<link href="css/style.css" rel="stylesheet" type="text/css" />
+<title>Delta ERS - Login</title>
 </head>
 <body>
+<div class= "loginHeader">
+    <img class = "logo" src="images/banklogo.png" alt = "Delta Savings logo"></img>
+    <h1 class = "loginHeader">Employee Reimbursement System</h1>
+</div>
 
+<div class = login>
+    <h3>Please log in to continue</h3>
+    <form action = "login" method = "POST">
+        <table>
+            <tr>
+                <td><input type = "text" name = "username" placeholder="Enter username"></td>
+            </tr>
+            <tr>
+                <td><input type = "password" name = "password" placeholder = "Enter password"></td>
+            </tr>
+            <tr>
+                <td class = "submit" ><input type="submit" value = "login"></td>
+            </tr>
+        </table>
+        
+    </form>
+</div>
 </body>
 </html>
