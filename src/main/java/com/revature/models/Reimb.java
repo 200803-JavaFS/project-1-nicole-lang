@@ -13,23 +13,83 @@ public class Reimb implements Serializable{
 	private Timestamp submittedDate;
 	private Timestamp resolvedDate;
 	private String desc;
-	private String author;
-	private String status;
-	private String type;
+	private int authorID;
+	private int statusID;
+	private int typeID;
+	private int resolverID;
 	
-	public Reimb(int reimbID, double amt, Timestamp submittedDate, Timestamp resolvedDate, String desc, String author,
-			String status, String type, String resolver) {
-		super();
-		this.reimbID = reimbID;
-		this.amt = amt;
-		this.submittedDate = submittedDate;
-		this.resolvedDate = resolvedDate;
-		this.desc = desc;
-		this.author = author;
-		this.status = status;
-		this.type = type;
-		this.resolver = resolver;
+	public int getReimbID() {
+		return reimbID;
 	}
-	private String resolver;
+
+	public void setReimbID(int reimbID) {
+		this.reimbID = reimbID;
+	}
+
+	public double getAmt() {
+		return amt;
+	}
+
+	public void setAmt(double amt) {
+		this.amt = amt;
+	}
+
+	public Timestamp getSubmittedDate() {
+		return submittedDate;
+	}
+
+	public void setSubmittedDate(Timestamp submittedDate) {
+		this.submittedDate = submittedDate;
+	}
+
+	public Timestamp getResolvedDate() {
+		return resolvedDate;
+	}
+
+	public void setResolvedDate(Timestamp resolvedDate) {
+		this.resolvedDate = resolvedDate;
+	}
+
+	public String getDesc() {
+		return desc;
+	}
+
+	public void setDesc(String desc) {
+		this.desc = desc;
+	}
+
+	public int getAuthorID() {
+		return authorID;
+	}
+
+	public void setAuthorID(int authorID) {
+		this.authorID = authorID;
+	}
+
+	public int getStatusID() {
+		return statusID;
+	}
+
+	public void setStatusID(int statusID) {
+		this.statusID = statusID;
+	}
+
+	public int getTypeID() {
+		return typeID;
+	}
+
+	public void setTypeID(int typeID) {
+		this.typeID = typeID;
+	}
+
+	public int getResolverID() {
+		return resolverID;
+	}
+
+	public void setResolverID(int resolverID) {
+		this.resolverID = resolverID;
+	}
+
+	
 	
 }
