@@ -2,6 +2,7 @@ package com.revature.controllers;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -24,8 +25,8 @@ public class LoginController {
 
 			BufferedReader reader = req.getReader();
 			StringBuilder builder = new StringBuilder();
+			//read the request body
 			String line = reader.readLine();
-			
 			while(line != null)
 			{
 				builder.append(line);
@@ -34,14 +35,16 @@ public class LoginController {
 			String body = builder.toString();
 			LoginDTO l = om.readValue(body, LoginDTO.class);
 
+			//check if user exists and password is correct
 			if(ls.login(l))
-			{
+			{//success
 				HttpSession ses = req.getSession();
 				ses.setAttribute("user", l);
 				ses.setAttribute("loggedin", true);
 				res.setStatus(200);
 				res.getWriter().println("Login Successful");
 			}else {
+				//failure
 				HttpSession ses = req.getSession(false);
 				if(ses != null)
 					ses.invalidate();
@@ -51,14 +54,17 @@ public class LoginController {
 		}
 	}
 	public void logout(HttpServletRequest req, HttpServletResponse res) throws IOException{
+		//dispose of the current session
 		HttpSession ses = req.getSession(false);
 		if(ses != null) {
+			//success
+			//get user info to print their username after the session is invalidated
 			LoginDTO l = (LoginDTO)ses.getAttribute("user");
 			ses.invalidate();
 			res.setStatus(200);
 			res.getWriter().println(l.userName + " has logged out successfully");
 		}else
-		{
+		{//400 bad request
 			res.setStatus(400);
 			res.getWriter().println("You must be logged in to log out");
 		}
