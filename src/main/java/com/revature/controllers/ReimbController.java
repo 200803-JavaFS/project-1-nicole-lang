@@ -28,13 +28,10 @@ public class ReimbController {
 				//check user type to determine whether they have access to this record
 				if(l.type == 0)//Employee
 				{
-					if(r.getAuthorID() == (l.userID))
+					if(r.getAuthor().getUserID() == (l.userID))
 						success = true;
-				}else if(l.type == 1)
-				{
-					if(r.getResolverID() == (l.userID) || r.getStatusID() == 0)
-						success = true;
-				}
+				}else if(l.type == 1)//Manager
+					success = true;
 			}catch(NumberFormatException e) {
 				e.printStackTrace();
 			}

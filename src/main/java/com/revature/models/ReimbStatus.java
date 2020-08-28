@@ -13,6 +13,7 @@ public class ReimbStatus {
 	private int id;
 	@Column(name="reimb_status")
 	private String name;
+	
 	public ReimbStatus() {
 		super();
 	}
