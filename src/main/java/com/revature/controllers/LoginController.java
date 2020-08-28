@@ -33,6 +33,7 @@ public class LoginController {
 				line = reader.readLine();
 			}
 			String body = builder.toString();
+			System.out.println(body);
 			LoginDTO l = om.readValue(body, LoginDTO.class);
 
 			//check if user exists and password is correct

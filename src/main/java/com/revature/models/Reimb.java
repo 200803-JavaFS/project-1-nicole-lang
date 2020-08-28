@@ -3,21 +3,82 @@ package com.revature.models;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+@Entity
+@Table(name="ers_reimbursements")
 public class Reimb implements Serializable{
 	
 	//Reimbursement model
 	private static final long serialVersionUID = 1L;
 	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name="reimb_id")
 	private int reimbID;
-	private double amt;
-	private Timestamp submittedDate;
-	private Timestamp resolvedDate;
-	private String desc;
-	private int authorID;
-	private int statusID;
-	private int typeID;
-	private int resolverID;
 	
+	@Column(name="reimb_amount")
+	private double amt;
+	@Column(name="reimb_submitted")
+	private Timestamp submittedDate;
+	@Column(name="reimb_resolved")
+	private Timestamp resolvedDate;
+	@Column(name="reimb_description")
+	private String desc;
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL) //many to one relationship
+	@JoinColumn(name="ers_users_id")
+	private User author;
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinColumn(name="reimb_status_id")
+	private ReimbStatus status;
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinColumn(name="reimb_type_id")
+	private ReimbType type;
+	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JoinColumn(name="ers_users_id")
+	private User resolver;
+	
+	public Reimb() {
+		super();
+	}
+
+	public Reimb(int reimbID, double amt, Timestamp submittedDate, Timestamp resolvedDate, String desc, User author,
+			ReimbStatus status, ReimbType type, User resolver) {
+		super();
+		this.reimbID = reimbID;
+		this.amt = amt;
+		this.submittedDate = submittedDate;
+		this.resolvedDate = resolvedDate;
+		this.desc = desc;
+		this.author = author;
+		this.status = status;
+		this.type = type;
+		this.resolver = resolver;
+	}
+
+	public Reimb(double amt, Timestamp submittedDate, Timestamp resolvedDate, String desc, User author,
+			ReimbStatus status, ReimbType type, User resolver) {
+		super();
+		this.amt = amt;
+		this.submittedDate = submittedDate;
+		this.resolvedDate = resolvedDate;
+		this.desc = desc;
+		this.author = author;
+		this.status = status;
+		this.type = type;
+		this.resolver = resolver;
+	}
+
 	public int getReimbID() {
 		return reimbID;
 	}
@@ -58,38 +119,36 @@ public class Reimb implements Serializable{
 		this.desc = desc;
 	}
 
-	public int getAuthorID() {
-		return authorID;
+	public User getAuthor() {
+		return author;
 	}
 
-	public void setAuthorID(int authorID) {
-		this.authorID = authorID;
+	public void setAuthor(User author) {
+		this.author = author;
 	}
 
-	public int getStatusID() {
-		return statusID;
+	public ReimbStatus getStatus() {
+		return status;
 	}
 
-	public void setStatusID(int statusID) {
-		this.statusID = statusID;
+	public void setStatus(ReimbStatus status) {
+		this.status = status;
 	}
 
-	public int getTypeID() {
-		return typeID;
+	public ReimbType getType() {
+		return type;
 	}
 
-	public void setTypeID(int typeID) {
-		this.typeID = typeID;
+	public void setType(ReimbType type) {
+		this.type = type;
 	}
 
-	public int getResolverID() {
-		return resolverID;
+	public User getResolver() {
+		return resolver;
 	}
 
-	public void setResolverID(int resolverID) {
-		this.resolverID = resolverID;
+	public void setResolver(User resolver) {
+		this.resolver = resolver;
 	}
 
-	
-	
 }

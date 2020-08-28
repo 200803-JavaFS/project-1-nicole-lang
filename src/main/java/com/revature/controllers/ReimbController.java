@@ -13,15 +13,19 @@ import com.revature.service.ReimbService;
 public class ReimbController {
 
 	private static ReimbService rs = new ReimbService();
-	
-	public Reimb getReimb(HttpServletRequest req, HttpServletResponse res) throws IOException{
+
+	public Reimb getReimb(String[] portions, HttpServletRequest req, HttpServletResponse res) throws IOException{
 		Boolean success = false;
 		Reimb r = new Reimb();
 		HttpSession ses = req.getSession();
 		LoginDTO l = (LoginDTO) ses.getAttribute("user");
+		if(portions.length == 2)
+		{
+			int reimbID = Integer.parseInt(portions[1]);
 			try {
-				int id = Integer.parseInt(req.getParameter("reimbid"));
-				r = rs.getByID(id);
+
+				r = rs.getByID(reimbID);
+				//check user type to determine whether they have access to this record
 				if(l.type == 0)//Employee
 				{
 					if(r.getAuthorID() == (l.userID))
@@ -38,5 +42,8 @@ public class ReimbController {
 				return r;
 			else
 				return null;
+
 		}
+		return r;
+	}
 }
