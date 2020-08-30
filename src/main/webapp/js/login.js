@@ -1,7 +1,20 @@
-document.getElementById('submit').onclick = getData();
-async function getData(){
-    let userName = document.getElementById('username').value;
-    let password = document.getElementById('password').value;
+let url = "http://localhost:8080/project1/";
+document.getElementById('submit').addEventListener("click", loginFunc);
 
-    let response = await fetch('index.html'+userName+password+'/')
+async function loginFunc(){
+    let usern = document.getElementById("username").value;
+    let userp = document.getElementById("password").value;
+    
+    let user = {
+        username : usern,
+        password : userp
+    }
+
+    let resp = await fetch(url+"login", {
+        method: 'POST',
+        body: JSON.stringify(user)
+    })
+    if(resp.status===200){
+        //show login success
+    }
 }

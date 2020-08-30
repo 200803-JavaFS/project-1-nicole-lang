@@ -37,6 +37,7 @@ public class LoginController {
 			LoginDTO l = om.readValue(body, LoginDTO.class);
 
 			//check if user exists and password is correct
+			
 			if(ls.login(l))
 			{//success
 				HttpSession ses = req.getSession();

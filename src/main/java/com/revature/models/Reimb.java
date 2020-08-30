@@ -36,7 +36,7 @@ public class Reimb implements Serializable{
 	@Column(name="reimb_description")
 	private String desc;
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL) //many to one relationship
-	@JoinColumn(name="ers_users_id")
+	@JoinColumn(name="reimb_author")
 	private User author;
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="reimb_status_id")
@@ -45,7 +45,7 @@ public class Reimb implements Serializable{
 	@JoinColumn(name="reimb_type_id")
 	private ReimbType type;
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	@JoinColumn(name="ers_users_id")
+	@JoinColumn(name="reimb_resolver")
 	private User resolver;
 	
 	public Reimb() {
