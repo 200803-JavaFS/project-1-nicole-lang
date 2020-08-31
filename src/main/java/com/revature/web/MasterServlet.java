@@ -1,6 +1,5 @@
 package com.revature.web;
 
-
 import java.io.IOException;
 import java.util.Arrays;
 import javax.servlet.ServletException;
@@ -16,6 +15,7 @@ public class MasterServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static LoginController lc;
 	private static ReimbController rc;
+
 	public MasterServlet() {
 		super();
 	}
@@ -23,61 +23,85 @@ public class MasterServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		final String URI = req.getRequestURI().replace("/project1/", "");
-
-		//JSON content type
+		String result;
+		// JSON content type
 		res.setContentType("application/json");
-		//tomcat sends a success code by default if it finds a servlet method so we need to set the status explicitly
+		// tomcat sends a success code by default if it finds a servlet method so we
+		// need to set the status explicitly
 		res.setStatus(404);
 
 		String[] portions = URI.split("/");
 
 		System.out.println(Arrays.toString(portions));
 
-		//get can retrieve one of the following:
-		//1: a list of reimbursement requests submitted by the logged-in employee, 
-		//either pending or resolved (separate these into two lists)
-		//2: a list of all reimbursement requests (for managers) ordered by submission date
-		//3: a single reimbursement record, with the ID columns linked to specific information 
-		//(like with PokeAPI)
-		if(portions[0].equals("reimb"))
-		{
+		// get can retrieve one of the following:
+		// 1: a list of reimbursement requests submitted by the logged-in employee,
+		// either pending or resolved (separate these into two lists)
+		// 2: a list of all reimbursement requests (for managers) ordered by submission
+		// date
+		// 3: a single reimbursement record (reimb/#)
+
+		if (portions[0].equals("reimb")) {
 			if (req.getSession(false) != null) {
-					rc.getReimb(portions, req, res);
-			}else {
+				if (portions.length == 2)
+					try {
+						result = rc.getReimb(Integer.parseInt(portions[1]), req).toString();
+						res.getWriter().println(result);
+					} catch (NumberFormatException e) {
+						e.printStackTrace();
+					}
+				else
+				{
+					result = rc.listRecords(req).toString();
+					res.getWriter().println(result);
+				}
+
+			} else {
 				res.setStatus(403);
 				res.getWriter().println("You must be logged in to do that!");
 			}
-		}
+		} else
+			res.sendError(400);
 	}
 
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		final String URI = req.getRequestURI().replace("/project1/", "");
 		String[] portions = URI.split("/");
-		//post will be used for 
-		//1: login
-		//2: adding new reimbursement requests
+		// post will be used for
+		// 1: login
+		// 2: adding new reimbursement requests
 
-		//JSON content type
+		// JSON content type
 		res.setContentType("application/json");
-		//tomcat sends a success code by default if it finds a servlet method so we need to set the status explicitly
+		// tomcat sends a success code by default if it finds a servlet method so we
+		// need to set the status explicitly
 		res.setStatus(404);
-		switch(portions[0])
-		{
+		switch (portions[0]) {
 		case "login":
-			lc.login(req, res);
+			try {
+				lc.login(req, res);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			break;
+		case "request":
+			// get form input for reimbursement request here once that page is built and
+			// ready for sending data
 			break;
 		case "logout":
 			lc.logout(req, res);
 			break;
+		default:
+			res.sendError(400);
 		}
 	}
 
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		//put will be used to update a reimbursement's status, resolver, and resolve date
-		//status will be set to either 1 (Approved) or 2 (Denied)
+		// put will be used to update a reimbursement's status, resolver, and resolve
+		// date
+		// status will be set to either 2 (Approved) or 3 (Denied)
 	}
 
 }

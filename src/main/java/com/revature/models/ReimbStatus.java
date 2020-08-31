@@ -8,6 +8,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="ers_reimbursement_status")
 public class ReimbStatus {
+	//Status codes: 1 = Pending, 2 = Approved, 3 = Denied
 	@Id
 	@Column(name="reimb_status_id")
 	private int id;

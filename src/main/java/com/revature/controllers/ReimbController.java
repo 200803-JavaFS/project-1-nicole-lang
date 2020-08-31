@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,33 +15,39 @@ public class ReimbController {
 
 	private static ReimbService rs = new ReimbService();
 
-	public Reimb getReimb(String[] portions, HttpServletRequest req, HttpServletResponse res) throws IOException{
+	public Reimb getReimb(int id, HttpServletRequest req) {
 		Boolean success = false;
-		Reimb r = new Reimb();
 		HttpSession ses = req.getSession();
 		LoginDTO l = (LoginDTO) ses.getAttribute("user");
-		if(portions.length == 2)
+
+		Reimb r = rs.getByID(id);
+		// check user type to determine whether they have access to this record
+		if (l.type == 0)// Employee
 		{
-			int reimbID = Integer.parseInt(portions[1]);
-			try {
-
-				r = rs.getByID(reimbID);
-				//check user type to determine whether they have access to this record
-				if(l.type == 0)//Employee
-				{
-					if(r.getAuthor().getUserID() == (l.userID))
-						success = true;
-				}else if(l.type == 1)//Manager
-					success = true;
-			}catch(NumberFormatException e) {
-				e.printStackTrace();
-			}
-			if(success)
-				return r;
-			else
-				return null;
-
+			if (r.getAuthor().getUserID() == (l.userID))
+				success = true;
+		} else if (l.type == 1)// Manager
+			success = true;
+		if (success)
+			return r;
+		else
+			return null;
+	}
+	public List<Reimb> listRecords(HttpServletRequest req){
+		List<Reimb> result;
+		HttpSession ses = req.getSession();
+		LoginDTO l = (LoginDTO) ses.getAttribute("user");
+		switch(ses.getAttribute("user_role").toString())
+		{
+		case "2":
+			result = rs.getAll();
+			break;
+		case "1":
+			result = rs.getByUser(l.userName);
+			break;
+		default:
+			result = null;
 		}
-		return r;
+		return result;
 	}
 }

@@ -11,8 +11,8 @@ import com.revature.models.LoginDTO;
 import com.revature.models.User;
 import com.revature.utils.HibernateUtil;
 
-public class UserDAO {
-	public void insert(User u) {
+public interface UserDAO {
+	public static void insert(User u) {
 		Session ses = HibernateUtil.getSession();
 		
 		Transaction tx = ses.beginTransaction();
@@ -22,25 +22,25 @@ public class UserDAO {
 		tx.commit();
 	}
 	
-	public void update(User u) {
+	public static void update(User u) {
 		Session ses = HibernateUtil.getSession();
 		ses.merge(u);
 	}
 	
-	public User selectById(int id) {
+	public static User selectById(int id) {
 		Session ses = HibernateUtil.getSession();
 		
 		return ses.get(User.class, id);
 	}
 	
 	@SuppressWarnings("unchecked")
-	public User selectByUsername(String username) {
+	public static User selectByUsername(String username) {
 		Session ses = HibernateUtil.getSession();
 		List<User> u = ses.createQuery("FROM User WHERE userName = " + username).list();		
 		return u.get(0);
 	}
 	@SuppressWarnings("unchecked")
-	public List<User> findAll() {
+	public static List<User> findAll() {
 		Session ses = HibernateUtil.getSession();	
 		
 		return ses.createQuery("FROM User").list();

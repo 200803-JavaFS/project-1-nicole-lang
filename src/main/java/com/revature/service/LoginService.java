@@ -3,24 +3,24 @@ package com.revature.service;
 import com.revature.models.LoginDTO;
 import com.revature.models.User;
 import com.revature.dao.UserDAO;
-public class LoginService {
-
-	public boolean login(LoginDTO l)
+public class LoginService implements UserDAO{
+	
+	public boolean login(LoginDTO l) throws Exception
 	{
+		//initialize CryptoService
+		CryptoService cs = new CryptoService();
+		
 		//check if user exists and password matches
-		UserDAO uDao = new UserDAO();
-		User u = uDao.selectByUsername(l.userName);
-		if(u!=null && l.password.equals(u.getPassword()))
-		{
+		User u = UserDAO.selectByUsername(l.userName);
+		if(u!=null && l.password.equals(cs.decrypt(u.getPassword())))
 			return true;
-
-		}else
+		else
 			return false;
 	}
 	
 	public User getUser(String username) {
-		UserDAO uDao = new UserDAO();
-		return uDao.selectByUsername(username);
+		//called after login method returns true
+		return UserDAO.selectByUsername(username);
 	}
 	
 }
