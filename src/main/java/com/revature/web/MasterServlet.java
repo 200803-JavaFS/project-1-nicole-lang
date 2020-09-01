@@ -1,5 +1,6 @@
 package com.revature.web;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Arrays;
 import javax.servlet.ServletException;
@@ -67,33 +68,41 @@ public class MasterServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		final String URI = req.getRequestURI().replace("/project1/", "");
-		String[] portions = URI.split("/");
+		BufferedReader reader = req.getReader();
+
+		StringBuilder sb = new StringBuilder();
+
+		String line = reader.readLine();
+		while (line != null) {
+			sb.append(line);
+			line = reader.readLine();
+		}
+		String body = new String(sb);
 		// post will be used for
 		// 1: login
 		// 2: adding new reimbursement requests
-
+		
 		// JSON content type
 		res.setContentType("application/json");
 		// tomcat sends a success code by default if it finds a servlet method so we
 		// need to set the status explicitly
 		res.setStatus(404);
-		switch (portions[0]) {
-		case "login":
+		System.out.println(body);
+			if(body.contains("password"))
+			{
 			try {
-				lc.login(req, res);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			break;
-		case "request":
-			// get form input for reimbursement request here once that page is built and
-			// ready for sending data
-			break;
-		case "logout":
-			lc.logout(req, res);
-			break;
-		default:
-			res.sendError(400);
+					lc.login(req, res, body);
+				} catch (Exception e) {
+					e.printStackTrace();
+					res.setStatus(401);
+					res.getWriter().println("Login failed.");
+				}
+			}else if(body.contains("author")) {
+				if(rc.addReimb(req, res, body))
+				{
+					res.setStatus(201);
+					res.getWriter().println("Reimbursement request submitted successfully.");
+				}
 		}
 	}
 

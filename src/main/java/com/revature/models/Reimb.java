@@ -24,8 +24,7 @@ public class Reimb implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="reimb_id")
-	private int reimbID;
-	
+	private int reimbID;	
 	@Column(name="reimb_amount")
 	private double amt;
 	@Column(name="reimb_submitted")
@@ -51,31 +50,27 @@ public class Reimb implements Serializable{
 		super();
 	}
 
-	public Reimb(int reimbID, double amt, Timestamp submittedDate, Timestamp resolvedDate, String desc, User author,
-			ReimbStatus status, ReimbType type, User resolver) {
+	public Reimb(int reimbID, double amt, Timestamp submittedDate, Timestamp resolvedDate, String desc,
+			ReimbStatus status, ReimbType type) {
 		super();
 		this.reimbID = reimbID;
 		this.amt = amt;
 		this.submittedDate = submittedDate;
 		this.resolvedDate = resolvedDate;
 		this.desc = desc;
-		this.author = author;
 		this.status = status;
 		this.type = type;
-		this.resolver = resolver;
 	}
 
-	public Reimb(double amt, Timestamp submittedDate, Timestamp resolvedDate, String desc, User author,
-			ReimbStatus status, ReimbType type, User resolver) {
+	public Reimb(double amt, Timestamp submittedDate, Timestamp resolvedDate, String desc,
+			ReimbStatus status, ReimbType type) {
 		super();
 		this.amt = amt;
 		this.submittedDate = submittedDate;
 		this.resolvedDate = resolvedDate;
 		this.desc = desc;
-		this.author = author;
 		this.status = status;
 		this.type = type;
-		this.resolver = resolver;
 	}
 
 	public int getReimbID() {

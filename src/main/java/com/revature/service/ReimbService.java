@@ -5,6 +5,7 @@ import java.util.List;
 import com.revature.dao.ReimbDAO;
 import com.revature.dao.UserDAO;
 import com.revature.models.Reimb;
+import com.revature.models.ReimbDTO;
 
 public class ReimbService implements ReimbDAO, UserDAO{
 	
@@ -17,6 +18,9 @@ public class ReimbService implements ReimbDAO, UserDAO{
 	public List<Reimb> getByUser(String userName) {
 		
 		return ReimbDAO.selectByUserName(userName);
+	}
+	public boolean addReimb(ReimbDTO request) {
+		return ReimbDAO.insert(request);
 	}
 
 }

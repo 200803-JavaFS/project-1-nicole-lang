@@ -1,32 +1,33 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="ISO-8859-1">
-<link href="css/style.css" rel="stylesheet" type="text/css" />
-<title>Delta ERS - Login</title>
-</head>
-<body>
-<div class= "loginHeader">
-    <img class = "logo" src="images/banklogo.png" alt = "Delta Savings logo"></img>
-    <h1 class = "loginHeader">Employee Reimbursement System</h1>
-</div>
 
-<div class = login>
-    <h3>Please log in to continue</h3>
-    <form action = "login" method = "POST">
+<head>
+    <meta charset="ISO-8859-1">
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+    <title>Delta ERS - Login</title>
+</head>
+
+<body>
+    <div class="loginHeader">
+        <img class="logo" src="images/banklogo.png" alt="Delta Savings logo"></img>
+        <h1 class="loginHeader">Employee Reimbursement System</h1>
+    </div>
+
+    <div id = login>
+        <h3>Please log in to continue</h3>
         <table>
             <tr>
-                <td><input id = "username" type = "text"name = "username" placeholder="Enter username" required></td>
+                <td><input id="username" type="text" name="username" placeholder="Enter username" required></td>
             </tr>
             <tr>
-                <td><input ud = "password" type = "password" name = "password" placeholder = "Enter password" required></td>
+                <td><input id="password" type="password" name="password" placeholder="Enter password" required></td>
             </tr>
             <tr>
-                <td class = "submit" ><input id = "submit" type="submit" value = "login"></td>
+                <td class="submit"><input id="submit" type="submit" value="login"></td>
             </tr>
         </table>
-        
-    </form>
-</div>
+    </div>
+    <script src="js/deltaERS.js"></script>
 </body>
+
 </html>

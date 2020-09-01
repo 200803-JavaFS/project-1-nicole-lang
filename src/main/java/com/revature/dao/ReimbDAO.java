@@ -1,23 +1,44 @@
 package com.revature.dao;
 
+import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import com.revature.models.Reimb;
+import com.revature.models.ReimbDTO;
+import com.revature.models.ReimbStatus;
 import com.revature.utils.HibernateUtil;
 
 public interface ReimbDAO {
 
-	public static void insert(Reimb r) {
+	public static boolean insert(ReimbDTO request) {
+		Reimb r = new Reimb();
+		r.setAmt(request.amt);
+		r.setAuthor(request.author);
+		r.setDesc(request.desc);
+		r.setType(request.type);
+		r.setStatus(new ReimbStatus(1, "Pending"));
+		
 		Session ses = HibernateUtil.getSession();
 		
 		Transaction tx = ses.beginTransaction();
+		//set timestamp for request submission
+		r.setSubmittedDate(new Timestamp(new Date().getTime())); ;
 		
-		ses.save(r);
-		
+		//add new request to database
+		try {
+			ses.save(r);
+		}catch(HibernateException e) {
+			e.printStackTrace();
+			tx.rollback();
+			return false;
+		}		
 		tx.commit();
+		return true;
 	}
 	
 	public static void update(Reimb r) {

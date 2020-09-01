@@ -20,19 +20,9 @@ public class LoginController {
 	private static LoginService ls = new LoginService();
 	private static ObjectMapper om = new ObjectMapper();
 
-	public void login(HttpServletRequest req, HttpServletResponse res) throws Exception {
+	public void login(HttpServletRequest req, HttpServletResponse res, String reqBody) throws Exception {
 
-		BufferedReader reader = req.getReader();
-		StringBuilder builder = new StringBuilder();
-		// read the request body
-		String line = reader.readLine();
-		while (line != null) {
-			builder.append(line);
-			line = reader.readLine();
-		}
-		String body = builder.toString();
-		System.out.println(body);
-		LoginDTO l = om.readValue(body, LoginDTO.class);
+		LoginDTO l = om.readValue(reqBody, LoginDTO.class);
 
 		// check if user exists and password is correct
 
