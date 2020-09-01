@@ -14,8 +14,8 @@ import com.revature.controllers.ReimbController;
 public class MasterServlet extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static LoginController lc;
-	private static ReimbController rc;
+	private static LoginController lc = new LoginController();
+	private static ReimbController rc = new ReimbController();
 
 	public MasterServlet() {
 		super();
@@ -51,8 +51,7 @@ public class MasterServlet extends HttpServlet {
 					} catch (NumberFormatException e) {
 						e.printStackTrace();
 					}
-				else
-				{
+				else {
 					result = rc.listRecords(req).toString();
 					res.getWriter().println(result);
 				}
@@ -68,6 +67,11 @@ public class MasterServlet extends HttpServlet {
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		final String URI = req.getRequestURI().replace("/project1/", "");
+		System.out.println(URI);
+
+		// JSON content type
+		res.setContentType("application/json");
+
 		BufferedReader reader = req.getReader();
 
 		StringBuilder sb = new StringBuilder();
@@ -81,28 +85,32 @@ public class MasterServlet extends HttpServlet {
 		// post will be used for
 		// 1: login
 		// 2: adding new reimbursement requests
-		
-		// JSON content type
-		res.setContentType("application/json");
 		// tomcat sends a success code by default if it finds a servlet method so we
 		// need to set the status explicitly
 		res.setStatus(404);
 		System.out.println(body);
-			if(body.contains("password"))
-			{
+		
+		switch (URI) {
+		case "login":
 			try {
-					lc.login(req, res, body);
-				} catch (Exception e) {
-					e.printStackTrace();
-					res.setStatus(401);
-					res.getWriter().println("Login failed.");
-				}
-			}else if(body.contains("author")) {
-				if(rc.addReimb(req, res, body))
-				{
-					res.setStatus(201);
-					res.getWriter().println("Reimbursement request submitted successfully.");
-				}
+				lc.login(req, res, body);
+			} catch (Exception e) {
+				e.printStackTrace();
+				
+				res.setStatus(401);
+				res.getWriter().println("Login failed.");
+			}
+			break;
+		case "reimb":
+			if (rc.addReimb(req, res, body)) {
+				res.setStatus(201);
+				res.getWriter().println("Reimbursement request submitted successfully.");
+			}
+			break;
+		default:
+			res.setStatus(400);
+			res.getWriter().println("Invalid post request");
+			break;
 		}
 	}
 

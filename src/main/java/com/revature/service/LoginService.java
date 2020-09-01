@@ -11,7 +11,7 @@ public class LoginService implements UserDAO{
 		CryptoService cs = new CryptoService();
 		
 		//check if user exists and password matches
-		User u = UserDAO.selectByUsername(l.userName);
+		User u = UserDAO.selectByUsername(l.username);
 		if(u!=null && l.password.equals(cs.decrypt(u.getPassword())))
 			return true;
 		else

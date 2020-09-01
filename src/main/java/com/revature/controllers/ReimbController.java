@@ -47,7 +47,7 @@ public class ReimbController {
 			result = rs.getAll();
 			break;
 		case "1":
-			result = rs.getByUser(l.userName);
+			result = rs.getByUser(l.username);
 			break;
 		default:
 			result = null;
@@ -60,7 +60,7 @@ public class ReimbController {
 
 		LoginDTO l = (LoginDTO) ses.getAttribute("user");
 
-		r.author = UserDAO.selectByUsername(l.userName);
+		r.author = UserDAO.selectByUsername(l.username);
 		return rs.addReimb(r); 
 		
 	}

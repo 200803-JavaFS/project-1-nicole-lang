@@ -36,7 +36,7 @@ public interface UserDAO {
 	@SuppressWarnings("unchecked")
 	public static User selectByUsername(String username) {
 		Session ses = HibernateUtil.getSession();
-		List<User> u = ses.createQuery("FROM User WHERE userName = " + username).list();		
+		List<User> u = ses.createQuery("FROM User WHERE userName = '" + username+ "'").list();		
 		return u.get(0);
 	}
 	@SuppressWarnings("unchecked")

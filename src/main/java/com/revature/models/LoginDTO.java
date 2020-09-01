@@ -6,7 +6,7 @@ public class LoginDTO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
-	public String userName;
+	public String username;
 	public String password;
 	public int type;
 	public int userID;

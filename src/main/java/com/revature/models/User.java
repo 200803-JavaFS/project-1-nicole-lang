@@ -27,7 +27,6 @@ public class User implements Serializable{
 
 	@ManyToOne(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
 	@JoinColumn(name="user_role_id")
-	@Column(name="user_role_id")
 	private Role role;
 	@Column(name="ers_username")
 	private String userName;

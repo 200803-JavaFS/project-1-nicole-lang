@@ -11,6 +11,7 @@ import org.hibernate.Transaction;
 import com.revature.models.Reimb;
 import com.revature.models.ReimbDTO;
 import com.revature.models.ReimbStatus;
+import com.revature.models.User;
 import com.revature.utils.HibernateUtil;
 
 public interface ReimbDAO {
@@ -64,6 +65,8 @@ public interface ReimbDAO {
 	public static List<Reimb> selectByUserName(String userName) {
 		//return all reimbursements submitted by the current user; for employees
 		Session ses = HibernateUtil.getSession();
-		return ses.createQuery("FROM Reimb WHERE reimb_author = " + UserDAO.selectByUsername(userName).getUserID()).list();
+		User u = UserDAO.selectByUsername(userName);
+		
+		return ses.createQuery("FROM Reimb WHERE reimb_author = " + u.getUserID()).list();
 	}
 }

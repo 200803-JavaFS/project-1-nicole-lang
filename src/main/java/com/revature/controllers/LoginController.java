@@ -1,12 +1,7 @@
 package com.revature.controllers;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -23,14 +18,13 @@ public class LoginController {
 	public void login(HttpServletRequest req, HttpServletResponse res, String reqBody) throws Exception {
 
 		LoginDTO l = om.readValue(reqBody, LoginDTO.class);
-
 		// check if user exists and password is correct
 
 		if (ls.login(l)) {// success
 			HttpSession ses = req.getSession();
 			ses.setAttribute("user", l);
 			ses.setAttribute("loggedin", true);
-			ses.setAttribute("user_role", ls.getUser(l.userName).getRole());
+			ses.setAttribute("user_role_id", ls.getUser(l.username).getRole().getRoleID());
 			res.setStatus(200);
 			res.getWriter().println("Login Successful");
 		} else {
@@ -52,7 +46,7 @@ public class LoginController {
 			LoginDTO l = (LoginDTO) ses.getAttribute("user");
 			ses.invalidate();
 			res.setStatus(200);
-			res.getWriter().println(l.userName + " has logged out successfully");
+			res.getWriter().println(l.username + " has logged out successfully");
 		} else {// 400 bad request
 			res.setStatus(400);
 			res.getWriter().println("You must be logged in to log out");

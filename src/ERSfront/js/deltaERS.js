@@ -11,7 +11,7 @@ async function loginFunc(){
     }
     
     let resp = await fetch(url + "login", {
-        method: 'POST',
+        method: "POST",
         body: JSON.stringify(user),
         credentials: "include"
     })
