@@ -12,8 +12,7 @@
         <img class="logo" src="images/banklogo.png" alt="Delta Savings logo"></img>
         <h1 class="loginHeader">Employee Reimbursement System</h1>
     </div>
-
-    <div id = login>
+    <div id = "login">
         <h3>Please log in to continue</h3>
         <table>
             <tr>
@@ -27,6 +26,23 @@
             </tr>
         </table>
     </div>
+    <table hidden>
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>Amount</td>
+                <td>Description</td>
+                <td>Date Submitted</td>
+                <td>Author</td>
+                <td>Status</td>
+                <td>Type</td>
+            </tr>
+        </thead>
+        <tbody id = "reimb">
+            <!--List of all reimbursements accessible by the current user-->
+
+        </tbody>
+    </table>
     <script src="js/deltaERS.js"></script>
 </body>
 

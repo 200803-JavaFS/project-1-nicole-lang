@@ -67,7 +67,6 @@ public class Reimb implements Serializable{
 		super();
 		this.amt = amt;
 		this.submittedDate = submittedDate;
-		this.resolvedDate = resolvedDate;
 		this.desc = desc;
 		this.status = status;
 		this.type = type;
