@@ -27,8 +27,6 @@ public interface ReimbDAO {
 		Session ses = HibernateUtil.getSession();
 		
 		Transaction tx = ses.beginTransaction();
-		//set timestamp for request submission
-		r.setSubmittedDate(new Timestamp(new Date().getTime()));
 		
 		//add new request to database
 		try {
@@ -42,9 +40,23 @@ public interface ReimbDAO {
 		return true;
 	}
 	
-	public static void update(Reimb r) {
+	public static boolean update(ReimbDTO request) {
 		Session ses = HibernateUtil.getSession();
-		ses.merge(r);
+		Reimb r = new Reimb();
+		r.setAmt(request.amt);
+		r.setAuthor(request.author);
+		r.setDesc(request.desc);
+		r.setType(request.type);
+		r.setStatus(request.status);
+		r.setResolver(request.resolver);
+		try {
+			ses.merge(r);
+		}catch(HibernateException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+		
 	}
 	
 	public static Reimb selectById(int id) {

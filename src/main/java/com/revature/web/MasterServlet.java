@@ -24,7 +24,6 @@ public class MasterServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 		final String URI = req.getRequestURI().replace("/project1/", "");
-		String result;
 		// JSON content type
 		res.setContentType("application/json");
 		// tomcat sends a success code by default if it finds a servlet method so we
@@ -46,22 +45,23 @@ public class MasterServlet extends HttpServlet {
 			if (req.getSession(false) != null) {
 				if (portions.length == 2)
 					try {
-						result = rc.getReimb(Integer.parseInt(portions[1]), req).toString();
-						res.getWriter().println(result);
-					} catch (NumberFormatException e) {
+						rc.getReimb(Integer.parseInt(portions[1]), req, res);
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				else {
-					result = rc.listRecords(req).toString();
-					res.getWriter().println(result);
+					try {
+						rc.listRecords(req, res);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}					
 				}
-
 			} else {
 				res.setStatus(403);
 				res.getWriter().println("You must be logged in to do that!");
 			}
 		} else
-			res.sendError(400);
+			res.setStatus(400);
 	}
 
 	@Override
@@ -105,6 +105,10 @@ public class MasterServlet extends HttpServlet {
 			if (rc.addReimb(req, res, body)) {
 				res.setStatus(201);
 				res.getWriter().println("Reimbursement request submitted successfully.");
+			}else
+			{
+				res.setStatus(401);
+				res.getWriter().println("Failed to submit request");
 			}
 			break;
 		default:

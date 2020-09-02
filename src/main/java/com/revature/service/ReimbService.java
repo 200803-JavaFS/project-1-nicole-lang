@@ -22,5 +22,7 @@ public class ReimbService implements ReimbDAO, UserDAO{
 	public boolean addReimb(ReimbDTO request) {
 		return ReimbDAO.insert(request);
 	}
-
+	public boolean updateStatus(ReimbDTO r) {
+		return ReimbDAO.update(r);
+	}
 }

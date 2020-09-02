@@ -37,7 +37,7 @@ async function loginFunc(){
         //list existing reimbursements
         
         resp = await fetch(url + "reimb", {
-            method = "GET",
+            method: "GET",
             credentials: 'include'
         })
         if (resp.status === 200) {

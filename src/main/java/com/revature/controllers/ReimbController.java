@@ -1,6 +1,8 @@
 package com.revature.controllers;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +21,7 @@ public class ReimbController {
 	private static ReimbService rs = new ReimbService();
 	private static ObjectMapper om = new ObjectMapper();
 
-	public Reimb getReimb(int id, HttpServletRequest req) {
+	public void getReimb(int id, HttpServletRequest req, HttpServletResponse res) throws Exception{
 		Boolean success = false;
 		HttpSession ses = req.getSession();
 		LoginDTO l = (LoginDTO) ses.getAttribute("user");
@@ -32,12 +34,12 @@ public class ReimbController {
 				success = true;
 		} else if (l.type == 1)// Manager
 			success = true;
-		if (success)
-			return r;
-		else
-			return null;
+		if (success) {
+			String json = om.writeValueAsString(r);
+			res.getWriter().println(json);
+		}
 	}
-	public List<Reimb> listRecords(HttpServletRequest req){
+	public void listRecords(HttpServletRequest req, HttpServletResponse res) throws Exception{
 		List<Reimb> result;
 		HttpSession ses = req.getSession();
 		LoginDTO l = (LoginDTO) ses.getAttribute("user");
@@ -52,7 +54,10 @@ public class ReimbController {
 		default:
 			result = null;
 		}
-		return result;
+		if(result != null) {
+			String json = om.writeValueAsString(result);
+			res.getWriter().println(json);
+		}
 	}
 	public boolean addReimb(HttpServletRequest req, HttpServletResponse res, String body) throws IOException{
 		ReimbDTO r = om.readValue(body, ReimbDTO.class);
@@ -63,5 +68,13 @@ public class ReimbController {
 		r.author = UserDAO.selectByUsername(l.username);
 		return rs.addReimb(r); 
 		
+	}
+	public boolean updateReimb(HttpServletRequest req, HttpServletResponse res, String body) throws IOException{
+		ReimbDTO r = om.readValue(body, ReimbDTO.class);
+		HttpSession ses = req.getSession();
+
+		LoginDTO l = (LoginDTO) ses.getAttribute("user");
+		r.resolver = UserDAO.selectByUsername(l.username);
+		return rs.updateStatus(r);
 	}
 }
