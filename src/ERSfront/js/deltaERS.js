@@ -52,18 +52,18 @@ async function loginFunc(){
 }
 function showForm(){
     document.getElementById("requestTable").removeAttribute("hidden");
-    createReimb.setAttribute("hidden");
+    createReimb.setAttribute("hidden", true);
 }
 
 async function createReimbFunc(){
     let rAmt = document.getElementById("amt").value;
     let rDesc = document.getElementById("desc").value;
     let typeSelect = document.getElementsByName("type");
-    for(var i = 1; i <= typeSelect.length; i++)
+    for(var i = 0; i < typeSelect.length; i++)
     {
-        if(typeSelect[i].checked == true)
+        if(typeSelect[i].checked)
         {
-            let rType = i;
+            let rType = i + 1;
         }
     }
     let reimb = {
@@ -83,7 +83,7 @@ async function createReimbFunc(){
         resultText.innerText = "Reimbursement submitted successfully"
         //retrieve updated reimbursement list
         listReimbFunc();
-        document.getElementById("requestTable").setAttribute("hidden");
+        document.getElementById("requestTable").setAttribute("hidden", true);
     }
 }
 async function listReimbFunc(){

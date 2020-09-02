@@ -67,7 +67,6 @@ public class ReimbController {
 
 		LoginDTO l = (LoginDTO) ses.getAttribute("user");
 
-		r.author = UserDAO.selectByUsername(l.username);
 		return rs.addReimb(r); 
 		
 	}
