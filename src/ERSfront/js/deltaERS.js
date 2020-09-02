@@ -83,6 +83,7 @@ async function createReimbFunc(){
         resultText.innerText = "Reimbursement submitted successfully"
         //retrieve updated reimbursement list
         listReimbFunc();
+        document.getElementById("requestTable").setAttribute("hidden");
     }
 }
 async function listReimbFunc(){
