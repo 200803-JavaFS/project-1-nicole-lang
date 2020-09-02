@@ -28,7 +28,7 @@ public interface ReimbDAO {
 		
 		Transaction tx = ses.beginTransaction();
 		//set timestamp for request submission
-		r.setSubmittedDate(new Timestamp(new Date().getTime())); ;
+		r.setSubmittedDate(new Timestamp(new Date().getTime()));
 		
 		//add new request to database
 		try {
@@ -67,6 +67,6 @@ public interface ReimbDAO {
 		Session ses = HibernateUtil.getSession();
 		User u = UserDAO.selectByUsername(userName);
 		
-		return ses.createQuery("FROM Reimb WHERE reimb_author = " + u.getUserID()).list();
+		return ses.createQuery("FROM Reimb WHERE author = " + u.getUserID()).list();
 	}
 }

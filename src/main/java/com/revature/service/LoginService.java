@@ -7,6 +7,8 @@ public class LoginService implements UserDAO{
 	
 	public boolean login(LoginDTO l) throws Exception
 	{
+		//log in as an existing user; returns a boolean
+		
 		//initialize CryptoService
 		CryptoService cs = new CryptoService();
 		
@@ -19,7 +21,7 @@ public class LoginService implements UserDAO{
 	}
 	
 	public User getUser(String username) {
-		//called after login method returns true
+		//called after login method returns true; returns a user
 		return UserDAO.selectByUsername(username);
 	}
 	
