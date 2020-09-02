@@ -43,12 +43,14 @@ public class ReimbController {
 		List<Reimb> result;
 		HttpSession ses = req.getSession();
 		LoginDTO l = (LoginDTO) ses.getAttribute("user");
-		switch(ses.getAttribute("user_role").toString())
+		int roleID = Integer.parseInt(ses.getAttribute("user_role_id").toString());
+		System.out.println("Role ID = "+ roleID);
+		switch(roleID)
 		{
-		case "2":
+		case 2: //Manager
 			result = rs.getAll();
 			break;
-		case "1":
+		case 1: //Employee
 			result = rs.getByUser(l.username);
 			break;
 		default:
