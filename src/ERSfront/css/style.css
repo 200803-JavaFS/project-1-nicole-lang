@@ -33,3 +33,25 @@ div.login{
 .logo{
     float: left;
 }
+#requestTable{
+    background-color: silver;
+}
+#requestTable td{
+    background-color: white;
+}
+thead{
+    font-weight: bold;
+    text-align: center;
+}
+#amt{
+    width: 1in;
+    margin: 5px;
+}
+#desc{
+    width: 5in;
+    margin: 5px;
+}
+#submitRequest{
+    background-color: white;
+    margin: 20px;
+}

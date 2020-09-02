@@ -1,7 +1,11 @@
 const url = "http://localhost:8080/project1/";
-document.getElementById('submit').addEventListener("click", loginFunc);
-var loginForm = document.getElementById("login")
+document.getElementById("submit").addEventListener("click", loginFunc);
+document.getElementById("submitRequest").addEventListener("click", createReimbFunc);
+var loginForm = document.getElementById("login");
+var buttonDiv = document.getElementById("buttons");
 var resultText;
+var createReimb = document.createElement("button");
+var usern;
 async function loginFunc(){
 
     if(!document.getElementById("result") == null)
@@ -15,7 +19,7 @@ async function loginFunc(){
      
     resultText.innerText = "Checking database...";
 
-    let usern = document.getElementById("username").value;
+    usern = document.getElementById("username").value;
     let userp = document.getElementById("password").value;
     
     let user = {
@@ -38,20 +42,40 @@ async function loginFunc(){
         listReimbFunc();   
 
         //create button for sending new request
-        let createReimb = document.createElement("button");
-        createReimb.addEventListener("click", createReimbFunc);
-        createReimb.innerText = ""
+        createReimb.addEventListener("click", showForm);
+        createReimb.innerText = "New Request";
+        buttonDiv.appendChild(createReimb);
         
     }else
         resultText.innerText = "Login failed";
     
 }
+function showForm(){
+    document.getElementById("requestTable").removeAttribute("hidden");
+    createReimb.setAttribute("hidden");
+}
 
 async function createReimbFunc(){
-    document.getElementById("avbody").innerText ="";
+    let rAmt = document.getElementById("amt").value;
+    let rDesc = document.getElementById("desc").value;
+    let typeSelect = document.getElementsByName("type");
+    for(var i = 1; i <= typeSelect.length; i++)
+    {
+        if(typeSelect[i].checked == true)
+        {
+            let rType = i;
+        }
+    }
+    let reimb = {
+        amt: rAmt,
+        desc: rDesc,
+        typeId: rType,
+        author: usern
+    }
 
     let resp = await fetch(url + "reimb", {
         method : 'POST',
+        body : json.stringify(reimb),
         credentials: 'include'
     });
 

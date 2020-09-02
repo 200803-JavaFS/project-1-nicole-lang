@@ -43,6 +43,36 @@
 
         </tbody>
     </table>
+    <table id = "requestTable">
+        <thead>
+            <tr>
+                <td>Amount ($)</td>
+                <td>Description</td>
+                <td>Type</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><input id="amt" type="number"></td>
+                <td><input id="desc" type="text"></td>
+                <td id = "type">
+                    <input type="radio" id="lodging" name="type" value="Lodging" checked>
+                    <label for="lodging">Lodging</label><br>
+                    <input type="radio" id="travel" name="type" value="Travel">
+                    <label for="travel">Travel</label><br>
+                    <input type="radio" id="food" name="type" value="Food">
+                    <label for="food">Food</label> <br>
+                    <input type="radio" id="other" name="type" value="Other">
+                    <label for="other">Other</label>
+                </td>
+                <td><input id="submitRequest" type="button" value="Submit"></td>
+            </tr>
+        </tbody>
+    </table>
+    <div id ="buttons">
+
+    </div>
     <script src="js/deltaERS.js"></script>
 </body>
 
