@@ -14,10 +14,7 @@ public class LoginService implements UserDAO{
 		
 		//check if user exists and password matches
 		User u = UserDAO.selectByUsername(l.username);
-		if(u!=null && l.password.equals(cs.decrypt(u.getPassword())))
-			return true;
-		else
-			return false;
+		return(u!=null && l.password.equals(cs.decrypt(u.getPassword())));
 	}
 	
 	public User getUser(String username) {

@@ -1,9 +1,9 @@
 package com.revature.dao;
 
-import java.util.Date;
-import java.sql.Timestamp;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -17,6 +17,7 @@ import com.revature.utils.HibernateUtil;
 
 public interface ReimbDAO {
 
+	public static Logger log = LogManager.getLogger();
 	public static boolean insert(ReimbDTO request) {
 		//create new reimbursement request
 		Reimb r = new Reimb();
@@ -38,6 +39,8 @@ public interface ReimbDAO {
 			tx.rollback();
 			return false;
 		}		
+		String logMessage = "New reimbursement request added by user " + request.author;
+		log.info(logMessage);
 		tx.commit();
 		return true;
 	}
@@ -58,7 +61,9 @@ public interface ReimbDAO {
 			e.printStackTrace();
 			tx.rollback();
 			return false;
-		}		
+		}
+		String logMessage = "Reimbursement request " + request.reimbId + " " + r.getStatus().getName() + " by " + r.getResolver().getUserName();
+		log.info(logMessage);
 		tx.commit();
 		return true;
 		
@@ -70,16 +75,14 @@ public interface ReimbDAO {
 	}
 
 	public static Reimb selectById(int id) {
-		Session ses = HibernateUtil.getSession();
-		
+		Session ses = HibernateUtil.getSession();	
 		return ses.get(Reimb.class, id);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static List<Reimb> findAll() {
 		//return all reimbursement records, sorted by status (pending first)
-		Session ses = HibernateUtil.getSession();
-		
+		Session ses = HibernateUtil.getSession();		
 		return ses.createQuery("FROM Reimb ORDER BY status ASC").list();
 	}
 
@@ -87,8 +90,7 @@ public interface ReimbDAO {
 	public static List<Reimb> selectByUserName(String userName) {
 		//return all reimbursements submitted by the current user; for employees
 		Session ses = HibernateUtil.getSession();
-		User u = UserDAO.selectByUsername(userName);
-		
+		User u = UserDAO.selectByUsername(userName);		
 		return ses.createQuery("FROM Reimb WHERE author = " + u.getUserID()).list();
 	}
 	public static ReimbType getType(int id) {

@@ -26,6 +26,8 @@ public class LoginController {
 			ses.setAttribute("loggedin", true);
 			ses.setAttribute("user_role_id", ls.getUser(l.username).getRole().getRoleID());
 			res.setStatus(200);
+			String json = om.writeValueAsString(ses.getAttribute("user_role_id"));
+			res.getWriter().println(json);
 			res.getWriter().println("Login Successful");
 		} else {
 			// failure

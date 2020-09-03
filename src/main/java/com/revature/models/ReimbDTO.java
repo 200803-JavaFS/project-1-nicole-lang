@@ -11,7 +11,9 @@ public class ReimbDTO implements Serializable{
 	public double amt;
 	public String desc;
 	public String author;	
+	public Timestamp submittedDate;
 	public String resolver;
+	public Timestamp resolvedDate;
 	public int statusId;	
 	public int typeId;
 }

@@ -120,9 +120,22 @@ public class MasterServlet extends HttpServlet {
 
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		// put will be used to update a reimbursement's status, resolver, and resolve
-		// date
+		// put will be used to update a reimbursement's status, resolver, and resolve date
 		// status will be set to either 2 (Approved) or 3 (Denied)
+		final String URI = req.getRequestURI().replace("/project1/", "");
+		System.out.println(URI);
+
+		// JSON content type
+		res.setContentType("application/json");
+
+		String body = req.getReader().readLine();
+		if(URI.equals("reimb")) {
+			if(rc.updateReimb(req, res, body)) {
+				res.setStatus(200);
+			}else
+				res.setStatus(401);
+		}else
+			res.setStatus(400);
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,12 +19,14 @@ public class ReimbController {
 	private static ReimbService rs = new ReimbService();
 	private static ObjectMapper om = new ObjectMapper();
 
-	public void getReimb(int id, HttpServletRequest req, HttpServletResponse res) throws Exception{
+	public void getReimb(int id, HttpServletRequest req, HttpServletResponse res) throws IOException{
 		Boolean success = false;
 		HttpSession ses = req.getSession();
 		LoginDTO l = (LoginDTO) ses.getAttribute("user");
 
 		Reimb r = rs.getByID(id);
+		ReimbDTO rDTO = new ReimbDTO();
+		
 		// check user type to determine whether they have access to this record
 		if (l.type == 0)// Employee
 		{
@@ -32,16 +35,27 @@ public class ReimbController {
 		} else if (l.type == 1)// Manager
 			success = true;
 		if (success) {
-			String json = om.writeValueAsString(r);
+			//populate ReimbDTO instance for writing to json
+			rDTO.amt = r.getAmt();
+			rDTO.author = r.getAuthor().getUserName();
+			rDTO.desc = r.getDesc();
+			rDTO.reimbId = id;
+			rDTO.resolver = r.getResolver().getUserName();
+			rDTO.submittedDate = r.getSubmittedDate();
+			rDTO.resolvedDate = r.getResolvedDate();
+			rDTO.statusId = r.getStatus().getId();
+			rDTO.typeId = r.getType().getTypeID();
+			String json = om.writeValueAsString(rDTO);
 			res.getWriter().println(json);
 		}
 	}
 	public void listRecords(HttpServletRequest req, HttpServletResponse res) throws Exception{
 		List<Reimb> result;
+		List<ReimbDTO> finalResult = new ArrayList<ReimbDTO>();
+		ReimbDTO rDTO;
 		HttpSession ses = req.getSession();
 		LoginDTO l = (LoginDTO) ses.getAttribute("user");
 		int roleID = Integer.parseInt(ses.getAttribute("user_role_id").toString());
-		System.out.println("Role ID = "+ roleID);
 		switch(roleID)
 		{
 		case 2: //Manager
@@ -54,7 +68,27 @@ public class ReimbController {
 			result = null;
 		}
 		if(result != null) {
-			String json = om.writeValueAsString(result);
+			for(Reimb r : result) {
+				//write ReimbDTO entries for each reimbursement returned
+				rDTO = new ReimbDTO();
+				rDTO.amt = r.getAmt();
+				rDTO.author = r.getAuthor().getUserName();
+				rDTO.desc = r.getDesc();
+				rDTO.reimbId = roleID;
+				rDTO.resolver = r.getResolver().getUserName();
+				if(rDTO.resolver.equals(null))
+				{
+					rDTO.resolver = "";
+					
+				}else
+				rDTO.submittedDate = r.getSubmittedDate();
+				rDTO.resolvedDate = r.getResolvedDate();
+				rDTO.statusId = r.getStatus().getId();
+				rDTO.typeId = r.getType().getTypeID();
+				finalResult.add(rDTO);
+			}
+			//write final result as json
+			String json = om.writeValueAsString(finalResult);
 			res.getWriter().println(json);
 		}
 	}
