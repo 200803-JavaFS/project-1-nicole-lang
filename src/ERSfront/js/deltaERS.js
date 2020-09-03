@@ -6,6 +6,8 @@ var buttonDiv = document.getElementById("buttons");
 var resultText;
 var createReimb = document.createElement("button");
 var usern;
+var currentReimb;
+var newStatus;
 async function loginFunc(){
 
     if(!document.getElementById("result") == null)
@@ -50,14 +52,90 @@ async function loginFunc(){
                 createReimb.addEventListener("click", showForm);
                 createReimb.innerText = "New Request";
                 buttonDiv.appendChild(createReimb);
+                let logout = document.createElement("button");
+                logout.addEventListener("click", logoutFunc);
             }
     }else
         resultText.innerText = "Login failed";
     
 }
+async function logoutFunc(){
+    let resp = await fetch(url + "login", {
+        method: "POST",
+        credentials: "include"
+    })
+    if(resp.status === 200){
+        //refresh page to return to login
+        location.reload;
+    }
+    else{
+        resultText.innerText = "Logout failed";
+    }
+}
 function showForm(){
-    document.getElementById("requestTable").removeAttribute("hidden");
+    document.getElementById("requestTable").setAttribute("hidden", false);
     createReimb.setAttribute("hidden", true);
+}
+
+async function showUpdate(id){
+    //focuses on a single reimbursement in the list and allows update if it is a pending request
+    resp = await fetch(url + "reimb/" + id, {
+        method: "GET",
+        credentials: 'include'
+    })
+    currentReimb = await resp.json();
+   
+    let reimbBody = document.getElementById("reimb");
+    reimbBody.innerHTML = "";
+    let cell = document.createElement("td");
+    let row = document.createElement("tr");
+    cell.innerHTML = data.amt;
+    row.appendChild(cell);
+    let cell2 = document.createElement("td");
+    cell2.innerHTML = data.desc;
+    row.appendChild(cell2);
+    let cell3 = document.createElement("td");
+    cell3.innerHTML = data.submittedDate;
+    row.appendChild(cell3);
+    let cell4 = document.createElement("td");
+    cell4.innerHTML = data.author;
+    row.appendChild(cell4);
+    let cell6 = document.createElement("td");
+    switch(data.typeId){
+        case 1:
+            cell6.innerHTML = "Lodging";
+            break;
+        case 2:
+            cell6.innerHTML = "Travel";
+            break;
+        case 3:
+            cell6.innerHTML = "Food";
+            break;
+        case 4:
+            cell6.innerHTML = "Other";
+            break;
+    }
+    row.appendChild(cell6);
+    let cell7 = document.createElement("td");
+    if(currentReimb.statusId == 1){
+        //provide buttons for approve/deny
+        let approve = document.createElement("button");
+        approve.addEventListener("click", approveReimbFunc());
+        let deny = document.createElement("button");
+        deny.addEventListener("click", denyReimbFunc());
+        cell7.appendChild(approve);
+        cell7.appendChild(deny);
+        row.appendChild(cell7);
+    }else
+    {
+        if(data.statusId == 2){
+            cell7.innerHTML = "Approved";
+        }else{
+            cell7.innerHTML = "Denied";
+        }
+    }
+    //show record
+    reimbBody.appendChild(row);
 }
 
 async function createReimbFunc(){
@@ -99,13 +177,21 @@ async function listReimbFunc(userType){
         reimbBody.innerHTML = "";
         if(data!= '{}')
         {   //display the reimbursement table
-            document.getElementById("reimbTable").removeAttribute("hidden");
+            document.getElementById("reimbTable").setAttribute("hidden", false);
             for(let reimb of data){
                 //insert list of reimbursements into the tbody element with ID "reimb"
                 console.log(reimb);
                 let row = document.createElement("tr");
                 let cell = document.createElement("td");
-                cell.innerHTML = reimb.reimbId;
+                
+                if(userType == 2)
+                {//if user is a financial manager, add anchor to each reimbId that will enable approve/deny
+                    let idLink = document.createElement("a");
+                    idLink.addEventListener("click", showUpdate(reimb.reimbId));
+                }else
+                {
+                    cell.innerHTML = reimb.reimbId;
+                }
                 row.appendChild(cell);
                 let cell2 = document.createElement("td");
                 cell2.innerHTML = reimb.amt;
@@ -120,31 +206,65 @@ async function listReimbFunc(userType){
                 cell5.innerHTML = reimb.author;
                 row.appendChild(cell5);
                 let cell6 = document.createElement("td");
-                cell6.innerHTML = reimb.status;
+                switch(reimb.statusId){
+                    case 1:
+                        cell6.innerHTML = "Pending";
+                        break;
+                    case 2:
+                        cell6.innerHTML = "Approved";
+                        break;
+                    case 3:
+                        cell6.innerHTML = "Denied";
+                        break;    
+                }
                 row.appendChild(cell6);
                 let cell7 = document.createElement("td");
-                cell7.innerHTML = reimb.type;
-                row.appendChild(cell7);
-                if(userType==2){
-                    //userType 2 (Financial manager) can approve or deny requests; provide buttons for doing so
-                    let cell8 = document.createElement("td");
-                    let approve = document.createElement("button");
-                    approve.addEventListener("click", updateReimbFunc(2))
-                    approve.setAttribute("value", "Approve");
-                    let deny = document.createElement("button");
-                    deny.addEventListener("click", updateReimbFunc(3))
-                    approve.setAttribute("value", "Deny");
-                    cell8.appendChild(approve);
-                    cell8.appendChild(deny);
+                switch(reimb.typeId){
+                    case 1:
+                        cell7.innerHTML = "Lodging";
+                        break;
+                    case 2:
+                        cell7.innerHTML = "Travel";
+                        break;
+                    case 3:
+                        cell7.innerHTML = "Food";
+                        break;
+                    case 4:
+                        cell7.innerHTML = "Other";
+                        break;
                 }
+                row.appendChild(cell7);
                 reimbBody.appendChild(row);
             }
         }else{
             resultText.innerText = "No reimbursements found!"
         }
     }
-    async function updateReimbFunc(statusId){
-        //not yet implemented
+}
+function approveReimbFunc(){
+    updateReimbFunc(2);
+}
+function denyReimbFunc(){
+    updateReimbFunc(3);
+}
+async function updateReimbFunc(newStatus){  
+    let reimb = {
+        reimbId: currentReimb.reimbId,
+        statusId: newStatus,
+        resolver: usern
     }
-   
+    let resp = await fetch(url + "reimb", {
+        method : 'PUT',
+        body : json.stringify(reimb),
+        credentials: 'include'
+    });
+
+    if (resp.status === 200) {
+        resultText.innerText = "Reimbursement updated successfully"
+    }
+    else{
+        resultText.innerText = "Failed to update reimbursement"
+    }
+    //reload list
+    listReimbFunc();
 }
