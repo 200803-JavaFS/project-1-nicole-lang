@@ -38,14 +38,19 @@ async function loginFunc(){
         //show login success
         resultText.innerText = "Login successful";
         
+	//todo: from Java, return a json string containing current userType
+    let data = await resp.json;
+    let userType = data.userType;
         //list existing reimbursements
-        listReimbFunc();   
+        listReimbFunc(userType);   
 
-        //create button for sending new request
-        createReimb.addEventListener("click", showForm);
-        createReimb.innerText = "New Request";
-        buttonDiv.appendChild(createReimb);
-        
+        if(userType == 1)
+            {
+                //create button for sending new request
+                createReimb.addEventListener("click", showForm);
+                createReimb.innerText = "New Request";
+                buttonDiv.appendChild(createReimb);
+            }
     }else
         resultText.innerText = "Login failed";
     
@@ -58,19 +63,15 @@ function showForm(){
 async function createReimbFunc(){
     let rAmt = document.getElementById("amt").value;
     let rDesc = document.getElementById("desc").value;
-    let typeSelect = document.getElementsByName("type");
-    for(var i = 0; i < typeSelect.length; i++)
-    {
-        if(typeSelect[i].checked)
-        {
-            let rType = i + 1;
-        }
-    }
+    let typeList = document.getElementById("type");
+    let rType = typeList.options[typeList.selectedIndex].value;
+    
     let reimb = {
         amt: rAmt,
         desc: rDesc,
         typeId: rType,
-        author: usern
+        author: usern,
+        statusId: 1 //Pending
     }
 
     let resp = await fetch(url + "reimb", {
@@ -86,7 +87,7 @@ async function createReimbFunc(){
         document.getElementById("requestTable").setAttribute("hidden", true);
     }
 }
-async function listReimbFunc(){
+async function listReimbFunc(userType){
     resp = await fetch(url + "reimb", {
         method: "GET",
         credentials: 'include'
@@ -124,11 +125,26 @@ async function listReimbFunc(){
                 let cell7 = document.createElement("td");
                 cell7.innerHTML = reimb.type;
                 row.appendChild(cell7);
+                if(userType==2){
+                    //userType 2 (Financial manager) can approve or deny requests; provide buttons for doing so
+                    let cell8 = document.createElement("td");
+                    let approve = document.createElement("button");
+                    approve.addEventListener("click", updateReimbFunc(2))
+                    approve.setAttribute("value", "Approve");
+                    let deny = document.createElement("button");
+                    deny.addEventListener("click", updateReimbFunc(3))
+                    approve.setAttribute("value", "Deny");
+                    cell8.appendChild(approve);
+                    cell8.appendChild(deny);
+                }
                 reimbBody.appendChild(row);
             }
         }else{
             resultText.innerText = "No reimbursements found!"
         }
+    }
+    async function updateReimbFunc(statusId){
+        //not yet implemented
     }
    
 }

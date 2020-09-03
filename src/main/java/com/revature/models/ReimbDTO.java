@@ -7,10 +7,11 @@ public class ReimbDTO implements Serializable{
 
 	private static final long serialVersionUID = 1L;
 	
+	public int reimbId;
 	public double amt;
 	public String desc;
-	public User author;	
-	public User resolver;
-	public ReimbStatus status;	
-	public ReimbType type;
+	public String author;	
+	public String resolver;
+	public int statusId;	
+	public int typeId;
 }

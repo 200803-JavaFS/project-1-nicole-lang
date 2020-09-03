@@ -56,15 +56,14 @@
             <tr>
                 <td><input id="amt" type="number"></td>
                 <td><input id="desc" type="text"></td>
-                <td id = "type">
-                    <input type="radio" id="lodging" name="type" value="Lodging" checked>
-                    <label for="lodging">Lodging</label><br>
-                    <input type="radio" id="travel" name="type" value="Travel">
-                    <label for="travel">Travel</label><br>
-                    <input type="radio" id="food" name="type" value="Food">
-                    <label for="food">Food</label> <br>
-                    <input type="radio" id="other" name="type" value="Other">
-                    <label for="other">Other</label>
+                <td>
+                    <select id = "type">
+                        <option value = "1">Lodging</option>
+                        <option value = "2">Travel</option>
+                        <option value = "3">Food</option>
+                        <option value = "4">Other</option>
+                    </select>
+                    
                 </td>
                 <td><input id="submitRequest" type="button" value="Submit"></td>
             </tr>

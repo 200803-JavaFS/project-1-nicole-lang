@@ -1,8 +1,6 @@
 package com.revature.controllers;
 
 import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.dao.UserDAO;
 import com.revature.models.LoginDTO;
 import com.revature.models.Reimb;
 import com.revature.models.ReimbDTO;
@@ -63,19 +60,11 @@ public class ReimbController {
 	}
 	public boolean addReimb(HttpServletRequest req, HttpServletResponse res, String body) throws IOException{
 		ReimbDTO r = om.readValue(body, ReimbDTO.class);
-		HttpSession ses = req.getSession();
-
-		LoginDTO l = (LoginDTO) ses.getAttribute("user");
-
 		return rs.addReimb(r); 
 		
 	}
 	public boolean updateReimb(HttpServletRequest req, HttpServletResponse res, String body) throws IOException{
 		ReimbDTO r = om.readValue(body, ReimbDTO.class);
-		HttpSession ses = req.getSession();
-
-		LoginDTO l = (LoginDTO) ses.getAttribute("user");
-		r.resolver = UserDAO.selectByUsername(l.username);
 		return rs.updateStatus(r);
 	}
 }

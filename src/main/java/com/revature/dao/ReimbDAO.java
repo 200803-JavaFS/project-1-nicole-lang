@@ -11,18 +11,20 @@ import org.hibernate.Transaction;
 import com.revature.models.Reimb;
 import com.revature.models.ReimbDTO;
 import com.revature.models.ReimbStatus;
+import com.revature.models.ReimbType;
 import com.revature.models.User;
 import com.revature.utils.HibernateUtil;
 
 public interface ReimbDAO {
 
 	public static boolean insert(ReimbDTO request) {
+		//create new reimbursement request
 		Reimb r = new Reimb();
 		r.setAmt(request.amt);
-		r.setAuthor(request.author);
+		r.setAuthor(UserDAO.selectByUsername(request.author));
 		r.setDesc(request.desc);
-		r.setType(request.type);
-		r.setStatus(new ReimbStatus(1, "Pending"));
+		r.setType(getType(request.typeId));
+		r.setStatus(getStatus(request.statusId));
 		
 		Session ses = HibernateUtil.getSession();
 		
@@ -41,24 +43,32 @@ public interface ReimbDAO {
 	}
 	
 	public static boolean update(ReimbDTO request) {
+		//update status and resolver of a reimbursement
 		Session ses = HibernateUtil.getSession();
-		Reimb r = new Reimb();
-		r.setAmt(request.amt);
-		r.setAuthor(request.author);
-		r.setDesc(request.desc);
-		r.setType(request.type);
-		r.setStatus(request.status);
-		r.setResolver(request.resolver);
+		Reimb r = selectById(request.reimbId);
+		r.setStatus(getStatus(request.statusId));
+		r.setResolver(UserDAO.selectByUsername(request.resolver));
+		
+		Transaction tx = ses.beginTransaction();
+		
+		//add new request to database
 		try {
 			ses.merge(r);
 		}catch(HibernateException e) {
 			e.printStackTrace();
+			tx.rollback();
 			return false;
-		}
+		}		
+		tx.commit();
 		return true;
 		
 	}
 	
+	public static ReimbStatus getStatus(int id) {
+		Session ses = HibernateUtil.getSession();
+		return ses.get(ReimbStatus.class, id);
+	}
+
 	public static Reimb selectById(int id) {
 		Session ses = HibernateUtil.getSession();
 		
@@ -80,5 +90,10 @@ public interface ReimbDAO {
 		User u = UserDAO.selectByUsername(userName);
 		
 		return ses.createQuery("FROM Reimb WHERE author = " + u.getUserID()).list();
+	}
+	public static ReimbType getType(int id) {
+		//return type object based on id received from json
+		Session ses = HibernateUtil.getSession();
+		return ses.get(ReimbType.class, id);
 	}
 }
