@@ -30,12 +30,12 @@
         <thead>
             <tr>
                 <td>ID</td>
-                <td>Amount</td>
+                <td>Amount ($)</td>
                 <td>Description</td>
+                <td>Type</td>
                 <td>Date Submitted</td>
                 <td>Author</td>
                 <td>Status</td>
-                <td>Type</td>
             </tr>
         </thead>
         <tbody id = "reimb">
@@ -53,10 +53,10 @@
         </thead>
         <tbody>
             <tr>
-                <td><input id="amt" type="number"></td>
-                <td><input id="desc" type="text"></td>
+                <td><input class="amt" type="number"></td>
+                <td><input class="desc" type="text"></td>
                 <td>
-                    <select id = "type">
+                    <select class = "type">
                         <option value = "1">Lodging</option>
                         <option value = "2">Travel</option>
                         <option value = "3">Food</option>
@@ -64,17 +64,15 @@
                     </select>
                     
                 </td>
-                <td><input id="submitRequest" type="button" value="Submit"></td>
+                <td><input class="submitRequest" type="button" value="Submit"></td>
             </tr>
         </tbody>
     </table>
     <div hidden id ="popup">
-        <p>Incorrect Password</p>
+        <p id="popupText"></p>
         <input id="closePopup" type="button" value="OK">
     </div>
-    <div id ="buttons">
-
-    </div>
+    <div id ="buttons"></div>
     <script src="js/deltaERS.js"></script>
 </body>
 

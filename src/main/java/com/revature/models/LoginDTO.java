@@ -8,7 +8,7 @@ public class LoginDTO implements Serializable{
 	
 	public String username;
 	public String password;
-	public int type;
+	public int typeID;
 	public int userID;
 	
 }

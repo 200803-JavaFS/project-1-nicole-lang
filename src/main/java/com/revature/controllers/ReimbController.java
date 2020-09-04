@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.dao.UserDAO;
 import com.revature.models.LoginDTO;
 import com.revature.models.Reimb;
 import com.revature.models.ReimbDTO;
@@ -28,11 +29,11 @@ public class ReimbController {
 		ReimbDTO rDTO = new ReimbDTO();
 		
 		// check user type to determine whether they have access to this record
-		if (l.type == 0)// Employee
+		if (l.typeID == 1)// Employee
 		{
 			if (r.getAuthor().getUserID() == (l.userID))
 				success = true;
-		} else if (l.type == 1)// Manager
+		} else if (l.typeID == 2)// Manager
 			success = true;
 		if (success) {
 			//populate ReimbDTO instance for writing to json
@@ -56,7 +57,7 @@ public class ReimbController {
 		ReimbDTO rDTO;
 		HttpSession ses = req.getSession();
 		LoginDTO l = (LoginDTO) ses.getAttribute("user");
-		int roleID = Integer.parseInt(ses.getAttribute("user_role_id").toString());
+		int roleID = UserDAO.selectByUsername(l.username).getUserID();
 		switch(roleID)
 		{
 		case 2: //Manager

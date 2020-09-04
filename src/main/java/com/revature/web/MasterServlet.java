@@ -44,13 +44,13 @@ public class MasterServlet extends HttpServlet {
 		if (portions[0].equals("reimb")) {
 			if (req.getSession(false) != null) {
 				if (portions.length == 2)
-					try {
+					try {//get single reimb
 						rc.getReimb(Integer.parseInt(portions[1]), req, res);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				else {
-					try {
+					try {//get list of reimbs
 						rc.listRecords(req, res);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -60,8 +60,9 @@ public class MasterServlet extends HttpServlet {
 				res.setStatus(403);
 				res.getWriter().println("You must be logged in to do that!");
 			}
-		} else
+		} else {
 			res.setStatus(400);
+		}
 	}
 
 	@Override
@@ -95,9 +96,7 @@ public class MasterServlet extends HttpServlet {
 			try {
 				lc.login(req, res, body);					
 			} catch (Exception e) {
-				e.printStackTrace();			
-				res.setStatus(401);
-				res.getWriter().println("Login failed.");
+				e.printStackTrace();
 			}
 			break;
 		case "reimb":
@@ -109,6 +108,9 @@ public class MasterServlet extends HttpServlet {
 				res.setStatus(401);
 				res.getWriter().println("Failed to submit request");
 			}
+			break;
+		case "logout":
+			lc.logout(req, res);
 			break;
 		default:
 			res.setStatus(400);

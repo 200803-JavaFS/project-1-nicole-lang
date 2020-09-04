@@ -33,25 +33,28 @@ div.login{
 .logo{
     float: left;
 }
-#requestTable{
+#requestTable, #reimbTable{
     background-color: silver;
 }
-#requestTable td{
+#requestTable td, #reimb td{
     background-color: white;
+}
+#reimb td{
+    padding: 10px;
 }
 thead{
     font-weight: bold;
     text-align: center;
 }
-#amt{
+.amt{
     width: 1in;
     margin: 5px;
 }
-#desc{
+.desc{
     width: 5in;
     margin: 5px;
 }
-#submitRequest{
+.submitRequest{
     background-color: white;
     margin: 20px;
 }

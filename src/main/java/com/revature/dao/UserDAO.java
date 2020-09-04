@@ -14,8 +14,14 @@ public interface UserDAO {
 	@SuppressWarnings("unchecked")
 	public static User selectByUsername(String username) {
 		Session ses = HibernateUtil.getSession();
-		List<User> u = ses.createQuery("FROM User WHERE userName = '" + username+ "'").list();		
-		return u.get(0);
+		List<User> u = ses.createQuery("FROM User WHERE userName = '" + username+ "'").list();	
+		try {
+			User inputUser = u.get(0);
+			return inputUser;
+		}catch(IndexOutOfBoundsException e) {
+			System.out.println("User not found");
+			return null;
+		}
 	}
 	@SuppressWarnings("unchecked")
 	public static List<User> findAll() {
