@@ -19,24 +19,28 @@ public class LoginController {
 
 		LoginDTO l = om.readValue(reqBody, LoginDTO.class);
 		// check if user exists and password is correct
-
-		if (ls.login(l)) {// success
-			HttpSession ses = req.getSession();
-			ses.setAttribute("user", l);
-			ses.setAttribute("loggedin", true);
-			ses.setAttribute("user_role_id", ls.getUser(l.username).getRole().getRoleID());
-			res.setStatus(200);
-			String json = om.writeValueAsString(ses.getAttribute("user_role_id"));
-			res.getWriter().println(json);
-			res.getWriter().println("Login Successful");
-		} else {
-			// failure
-			HttpSession ses = req.getSession(false);
-			if (ses != null)
-				ses.invalidate();
-			res.setStatus(401);
-			res.getWriter().println("Login failed");
+		if (ls.getUser(l.username).getUserName().equals(l.username))
+		{
+			if (ls.login(l)) {// success
+				HttpSession ses = req.getSession();
+				ses.setAttribute("user", l);
+				ses.setAttribute("loggedin", true);
+				ses.setAttribute("user_role_id", ls.getUser(l.username).getRole().getRoleID());
+				res.setStatus(200);
+				String json = om.writeValueAsString(ses.getAttribute("user_role_id"));
+				res.getWriter().println(json);
+				res.getWriter().println("Login Successful");
+			} else {
+				// wrong password
+				HttpSession ses = req.getSession(false);
+				if (ses != null)
+					ses.invalidate();
+				res.setStatus(403);
+			}
+				
 		}
+		
+		
 	}
 
 	public void logout(HttpServletRequest req, HttpServletResponse res) throws IOException {

@@ -47,7 +47,8 @@ public class ReimbController {
 			rDTO.typeId = r.getType().getTypeID();
 			String json = om.writeValueAsString(rDTO);
 			res.getWriter().println(json);
-		}
+		}else
+			res.setStatus(403); //access denied
 	}
 	public void listRecords(HttpServletRequest req, HttpServletResponse res) throws Exception{
 		List<Reimb> result;
@@ -67,20 +68,14 @@ public class ReimbController {
 		default:
 			result = null;
 		}
-		if(result != null) {
 			for(Reimb r : result) {
 				//write ReimbDTO entries for each reimbursement returned
 				rDTO = new ReimbDTO();
+				rDTO.reimbId = roleID;
 				rDTO.amt = r.getAmt();
 				rDTO.author = r.getAuthor().getUserName();
 				rDTO.desc = r.getDesc();
-				rDTO.reimbId = roleID;
 				rDTO.resolver = r.getResolver().getUserName();
-				if(rDTO.resolver.equals(null))
-				{
-					rDTO.resolver = "";
-					
-				}else
 				rDTO.submittedDate = r.getSubmittedDate();
 				rDTO.resolvedDate = r.getResolvedDate();
 				rDTO.statusId = r.getStatus().getId();
@@ -89,15 +84,16 @@ public class ReimbController {
 			}
 			//write final result as json
 			String json = om.writeValueAsString(finalResult);
+			if(finalResult.isEmpty())
+				res.setStatus(204); //no content
 			res.getWriter().println(json);
-		}
 	}
-	public boolean addReimb(HttpServletRequest req, HttpServletResponse res, String body) throws IOException{
+	public boolean addReimb(String body) throws IOException{
 		ReimbDTO r = om.readValue(body, ReimbDTO.class);
 		return rs.addReimb(r); 
 		
 	}
-	public boolean updateReimb(HttpServletRequest req, HttpServletResponse res, String body) throws IOException{
+	public boolean updateReimb(String body) throws IOException{
 		ReimbDTO r = om.readValue(body, ReimbDTO.class);
 		return rs.updateStatus(r);
 	}

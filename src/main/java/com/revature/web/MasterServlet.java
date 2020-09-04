@@ -93,16 +93,15 @@ public class MasterServlet extends HttpServlet {
 		switch (URI) {
 		case "login":
 			try {
-				lc.login(req, res, body);
+				lc.login(req, res, body);					
 			} catch (Exception e) {
-				e.printStackTrace();
-				
+				e.printStackTrace();			
 				res.setStatus(401);
 				res.getWriter().println("Login failed.");
 			}
 			break;
 		case "reimb":
-			if (rc.addReimb(req, res, body)) {
+			if (rc.addReimb(body)) {
 				res.setStatus(201);
 				res.getWriter().println("Reimbursement request submitted successfully.");
 			}else
@@ -130,8 +129,8 @@ public class MasterServlet extends HttpServlet {
 
 		String body = req.getReader().readLine();
 		if(URI.equals("reimb")) {
-			if(rc.updateReimb(req, res, body)) {
-				res.setStatus(200);
+			if(rc.updateReimb(body)) {
+				res.setStatus(202);
 			}else
 				res.setStatus(401);
 		}else

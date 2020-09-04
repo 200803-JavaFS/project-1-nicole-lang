@@ -3,6 +3,7 @@ document.getElementById("submit").addEventListener("click", loginFunc);
 document.getElementById("submitRequest").addEventListener("click", createReimbFunc);
 var loginForm = document.getElementById("login");
 var buttonDiv = document.getElementById("buttons");
+var wrongPassword = document.getElementById("popup");
 var resultText;
 var createReimb = document.createElement("button");
 var usern;
@@ -39,8 +40,7 @@ async function loginFunc(){
     if(resp.status===200){
         //show login success
         resultText.innerText = "Login successful";
-        
-	//todo: from Java, return a json string containing current userType
+
     let data = await resp.json;
     let userType = data.userType;
         //list existing reimbursements
@@ -50,14 +50,25 @@ async function loginFunc(){
             {
                 //create button for sending new request
                 createReimb.addEventListener("click", showForm);
-                createReimb.innerText = "New Request";
+                createReimb.setAttribute("value", "New Request");
                 buttonDiv.appendChild(createReimb);
-                let logout = document.createElement("button");
-                logout.addEventListener("click", logoutFunc);
             }
+            let logout = document.createElement("button");
+            logout.setAttribute("value", "Log out");
+            logout.addEventListener("click", logoutFunc);
+            buttonDiv.appendChild(logout);
+
+    }else if(resp.status === 403){
+        wrongPassword.setAttribute("hidden", false);
+        document.getElementById("closePopup").addEventListener("click", closePopup);
     }else
         resultText.innerText = "Login failed";
     
+}
+function closePopup()
+{
+    wrongPassword.setAttribute("hidden", true);
+    resultText.replaceWith(loginForm);
 }
 async function logoutFunc(){
     let resp = await fetch(url + "login", {
@@ -158,7 +169,7 @@ async function createReimbFunc(){
         credentials: 'include'
     });
 
-    if (resp.status === 200) {
+    if (resp.status === 201) {
         resultText.innerText = "Reimbursement submitted successfully"
         //retrieve updated reimbursement list
         listReimbFunc();
@@ -175,8 +186,7 @@ async function listReimbFunc(userType){
         let data = await resp.json();
         reimbBody = document.getElementById("reimb");
         reimbBody.innerHTML = "";
-        if(data!= '{}')
-        {   //display the reimbursement table
+        //display the reimbursement table
             document.getElementById("reimbTable").setAttribute("hidden", false);
             for(let reimb of data){
                 //insert list of reimbursements into the tbody element with ID "reimb"
@@ -236,9 +246,9 @@ async function listReimbFunc(userType){
                 row.appendChild(cell7);
                 reimbBody.appendChild(row);
             }
-        }else{
-            resultText.innerText = "No reimbursements found!"
-        }
+    }else if(resp.status === 204)
+    {
+        resultText.innerText = "No reimbursements found!"
     }
 }
 function approveReimbFunc(){
@@ -259,7 +269,7 @@ async function updateReimbFunc(newStatus){
         credentials: 'include'
     });
 
-    if (resp.status === 200) {
+    if (resp.status === 202) {
         resultText.innerText = "Reimbursement updated successfully"
     }
     else{
