@@ -1,5 +1,7 @@
 package com.revature.dao;
 
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -51,7 +53,7 @@ public interface ReimbDAO {
 		Reimb r = selectById(request.reimbId);
 		r.setStatus(getStatus(request.statusId));
 		r.setResolver(UserDAO.selectByUsername(request.resolver));
-		
+		r.setResolvedDate(new Timestamp(System.currentTimeMillis()));
 		Transaction tx = ses.beginTransaction();
 		
 		//add new request to database

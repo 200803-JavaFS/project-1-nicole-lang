@@ -88,9 +88,11 @@ async function logoutFunc() {
 }
 
 function showForm() {
+    resultText.innerText = "";
     document.getElementById("requestTable").removeAttribute("hidden");
     createReimb.setAttribute("hidden", true);
-    document.getElementById("submitRequest").addEventListener("click", createReimbFunc);
+    let submitRequest = document.getElementById("submitRequest");
+    submitRequest.addEventListener("click", createReimbFunc);
 }
 
 async function showUpdate(id) {
@@ -169,7 +171,7 @@ async function createReimbFunc() {
 
     let resp = await fetch(url + "reimb", {
         method: 'POST',
-        body: json.stringify(reimb),
+        body: JSON.stringify(reimb),
         credentials: 'include'
     });
 
@@ -278,7 +280,7 @@ async function updateReimbFunc(newStatus) {
     }
     let resp = await fetch(url + "reimb", {
         method: 'PUT',
-        body: json.stringify(reimb),
+        body: JSON.stringify(reimb),
         credentials: 'include'
     });
 

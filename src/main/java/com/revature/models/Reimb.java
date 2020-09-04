@@ -33,7 +33,6 @@ public class Reimb implements Serializable{
 	@CreationTimestamp
 	@Column(name="reimb_submitted")
 	private Timestamp submittedDate;
-	@UpdateTimestamp
 	@Column(name="reimb_resolved")
 	private Timestamp resolvedDate;
 	@Column(name="reimb_description")
