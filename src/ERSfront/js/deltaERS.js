@@ -92,9 +92,9 @@ function showForm() {
     submitRequest.addEventListener("click", createReimbFunc);
 }
 
-async function showUpdate(id) {
+async function showUpdate() {
     //focuses on a single reimbursement in the list and allows update if it is a pending request
-    resp = await fetch(url + "reimb/" + id, {
+    resp = await fetch(url + "reimb/" + currentReimb.reimbId, {
         method: "GET",
         credentials: 'include'
     })
@@ -102,52 +102,52 @@ async function showUpdate(id) {
 
     let reimbBody = document.getElementById("reimb");
     reimbBody.innerHTML = "";
-    let ucell1 = document.createElement("td");
+
     let urow = document.createElement("tr");
+    
+    let ucell = document.createElement("td");
+    ucell.innerText = currentReimb.reimbId;
+    urow.appendChild(ucell);
+
+    let ucell1 = document.createElement("td");
     ucell1.innerText = currentReimb.amt;
     urow.appendChild(ucell1);
+
     let ucell2 = document.createElement("td");
     ucell2.innerText = currentReimb.desc;
     urow.appendChild(ucell2);
+
     let ucell3 = document.createElement("td");
-    ucell3.innerText = currentReimb.submittedDate;
-    urow.appendChild(ucell3);
-    let ucell4 = document.createElement("td");
-    ucell4.innerText = currentReimb.author;
-    urow.appendChild(ucell4);
-    let ucell6 = document.createElement("td");
     switch (currentReimb.typeId) {
         case 1:
-            ucell6.innerText = "Lodging";
+            ucell3.innerText = "Lodging";
             break;
         case 2:
-            ucell6.innerText = "Travel";
+            ucell3.innerText = "Travel";
             break;
         case 3:
-            ucell6.innerText = "Food";
+            ucell3.innerText = "Food";
             break;
         case 4:
-            ucell6.innerText = "Other";
+            ucell3.innerText = "Other";
             break;
     }
+    urow.appendChild(ucell3);
+
+    let ucell4 = document.createElement("td");
+    ucell4.innerText = currentReimb.submittedDate;
+    urow.appendChild(ucell4);
+
+    let ucell5 = document.createElement("td");
+    ucell5.innerText = currentReimb.author;
+    urow.appendChild(ucell5);
+
+    //provide buttons for approve/deny
+    let ucell6 = document.createElement("td");
+    ucell6.innerHTML = '<a id = "approve" href = "javascript:void(0)" onClick = "approveReimbFunc()">&#10003</a>' +
+                        '&nbsp;<a id = "deny" href = "javascript:void(0)" onClick = "denyReimbFunc()">X</a>';
     urow.appendChild(ucell6);
-    let ucell7 = document.createElement("td");
-    if (currentReimb.statusId == 1) {
-        //provide buttons for approve/deny
-        let approve = document.createElement("button");
-        approve.addEventListener("click", approveReimbFunc());
-        let deny = document.createElement("button");
-        deny.addEventListener("click", denyReimbFunc());
-        ucell7.appendChild(approve);
-        ucell7.appendChild(deny);
-        urow.appendChild(ucell7);
-    } else {
-        if (currentReimb.statusId == 2) {
-            ucell7.innerText = "Approved";
-        } else {
-            ucell7.innerText = "Denied";
-        }
-    }
+
     //show record
     reimbBody.appendChild(urow);
 }
@@ -243,16 +243,19 @@ async function listReimbFunc() {
             let cell7 = document.createElement("td");
             switch (reimb.statusId) {
                 case 1:
-                    cell7.innerText = "Pending";
+                    cell7.innerHTML = '<a id="updateLink" href = "javascript:void(0)" onClick = "showUpdate()">Pending</a>';
+                    currentReimb = reimb;
+                    row.appendChild(cell7);
                     break;
                 case 2:
                     cell7.innerText = "Approved";
+                    row.appendChild(cell7);
                     break;
                 case 3:
                     cell7.innerText = "Denied";
+                    row.appendChild(cell7);
                     break;
             }
-            row.appendChild(cell7);
             reimbBody.appendChild(row);
         }
     } else if (resp.status === 204) {

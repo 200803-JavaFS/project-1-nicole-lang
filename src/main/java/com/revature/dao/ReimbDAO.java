@@ -115,23 +115,4 @@ public interface ReimbDAO {
 		Session ses = HibernateUtil.getSession();
 		return ses.get(ReimbType.class, id);
 	}
-
-	public static boolean delete(ReimbDTO r) {
-		Session ses = HibernateUtil.getSession();
-		Reimb toDelete = selectById(r.reimbId);
-		Transaction tx = ses.beginTransaction();
-		
-		//add new request to database
-		try {
-			ses.delete(toDelete);
-		}catch(HibernateException e) {
-			e.printStackTrace();
-			tx.rollback();
-			return false;
-		}
-		String logMessage = "Test reimbursement removed successfully.";
-		log.debug(logMessage);
-		tx.commit();
-		return true;
-	}
 }
