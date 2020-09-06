@@ -23,6 +23,8 @@ public interface ReimbDAO {
 	public static Logger log = LogManager.getLogger();
 	public static boolean insert(ReimbDTO request) {
 		//create new reimbursement request
+		Boolean forTest = false;
+		Transaction tx;
 		Reimb r = new Reimb();
 		r.setAmt(request.amt);
 		r.setAuthor(UserDAO.selectByUsername(request.author));
@@ -31,9 +33,13 @@ public interface ReimbDAO {
 		r.setStatus(getStatus(request.statusId));
 		
 		Session ses = HibernateUtil.getSession();
-		
-		Transaction tx = ses.beginTransaction();
-		
+		if(ses.getTransaction()!=null)
+		{//If accessed by ReimbServiceTests, there will already be a transaction in progress.
+			forTest = true;
+			tx = ses.getTransaction();
+		}
+		else
+			tx = ses.beginTransaction();
 		//add new request to database
 		try {
 			ses.save(r);
@@ -44,7 +50,11 @@ public interface ReimbDAO {
 		}		
 		String logMessage = "New reimbursement request added by user " + request.author;
 		log.info(logMessage);
-		tx.commit();
+		if(!forTest)
+			//only commit if not unit testing
+			tx.commit();
+		else
+			tx.rollback();
 		return true;
 	}
 	
@@ -104,5 +114,24 @@ public interface ReimbDAO {
 		//return type object based on id received from json
 		Session ses = HibernateUtil.getSession();
 		return ses.get(ReimbType.class, id);
+	}
+
+	public static boolean delete(ReimbDTO r) {
+		Session ses = HibernateUtil.getSession();
+		Reimb toDelete = selectById(r.reimbId);
+		Transaction tx = ses.beginTransaction();
+		
+		//add new request to database
+		try {
+			ses.delete(toDelete);
+		}catch(HibernateException e) {
+			e.printStackTrace();
+			tx.rollback();
+			return false;
+		}
+		String logMessage = "Test reimbursement removed successfully.";
+		log.debug(logMessage);
+		tx.commit();
+		return true;
 	}
 }
