@@ -17,7 +17,7 @@
 			<!-- These will print the sql queries hibernate makes to the console and format them-->
 		<property name="hibernate.show_sql">true</property>
 		<property name="hibernate.format_sql">true</property>
-		<property name="hibernate.hbm2ddl.auto">update</property>
+		<property name="hibernate.hbm2ddl.auto">validate</property>
 		
 		<!-- Now we need our mappings -->
 		<mapping class="com.revature.models.User"/>

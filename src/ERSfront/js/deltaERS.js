@@ -78,12 +78,7 @@ async function logoutFunc() {
         credentials: "include"
     })
     if (resp.status === 200) {
-        resultText.replaceWith(loginForm);
-        document.getElementById("username").setAttribute("value", "");
-        document.getElementById("password").setAttribute("value", "");
-        document.getElementById("reimbTable").setAttribute("hidden", true);
-        document.getElementById("requestTable").setAttribute("hidden", true);
-        buttonDiv.innerHTML = "";
+        location.reload();
     } else {
         resultText.innerText = "Logout failed";
     }
@@ -107,54 +102,54 @@ async function showUpdate(id) {
 
     let reimbBody = document.getElementById("reimb");
     reimbBody.innerHTML = "";
-    let cell = document.createElement("td");
-    let row = document.createElement("tr");
-    cell.innerText = currentReimb.amt;
-    row.appendChild(cell);
-    let cell2 = document.createElement("td");
-    cell2.innerText = currentReimb.desc;
-    row.appendChild(cell2);
-    let cell3 = document.createElement("td");
-    cell3.innerText = currentReimb.submittedDate;
-    row.appendChild(cell3);
-    let cell4 = document.createElement("td");
-    cell4.innerText = currentReimb.author;
-    row.appendChild(cell4);
-    let cell6 = document.createElement("td");
+    let ucell1 = document.createElement("td");
+    let urow = document.createElement("tr");
+    ucell1.innerText = currentReimb.amt;
+    urow.appendChild(ucell1);
+    let ucell2 = document.createElement("td");
+    ucell2.innerText = currentReimb.desc;
+    urow.appendChild(ucell2);
+    let ucell3 = document.createElement("td");
+    ucell3.innerText = currentReimb.submittedDate;
+    urow.appendChild(ucell3);
+    let ucell4 = document.createElement("td");
+    ucell4.innerText = currentReimb.author;
+    urow.appendChild(ucell4);
+    let ucell6 = document.createElement("td");
     switch (currentReimb.typeId) {
         case 1:
-            cell6.innerText = "Lodging";
+            ucell6.innerText = "Lodging";
             break;
         case 2:
-            cell6.innerText = "Travel";
+            ucell6.innerText = "Travel";
             break;
         case 3:
-            cell6.innerText = "Food";
+            ucell6.innerText = "Food";
             break;
         case 4:
-            cell6.innerText = "Other";
+            ucell6.innerText = "Other";
             break;
     }
-    row.appendChild(cell6);
-    let cell7 = document.createElement("td");
+    urow.appendChild(ucell6);
+    let ucell7 = document.createElement("td");
     if (currentReimb.statusId == 1) {
         //provide buttons for approve/deny
         let approve = document.createElement("button");
         approve.addEventListener("click", approveReimbFunc());
         let deny = document.createElement("button");
         deny.addEventListener("click", denyReimbFunc());
-        cell7.appendChild(approve);
-        cell7.appendChild(deny);
-        row.appendChild(cell7);
+        ucell7.appendChild(approve);
+        ucell7.appendChild(deny);
+        urow.appendChild(ucell7);
     } else {
         if (currentReimb.statusId == 2) {
-            cell7.innerText = "Approved";
+            ucell7.innerText = "Approved";
         } else {
-            cell7.innerText = "Denied";
+            ucell7.innerText = "Denied";
         }
     }
     //show record
-    reimbBody.appendChild(row);
+    reimbBody.appendChild(urow);
 }
 
 async function createReimbFunc() {
@@ -193,7 +188,7 @@ async function listReimbFunc() {
     resp = await fetch(url + "reimb", {
         method: "GET",
         credentials: 'include'
-    })
+    });
     if (resp.status === 200) {
 
         let data = await resp.json();
@@ -205,16 +200,10 @@ async function listReimbFunc() {
             //insert list of reimbursements into the tbody element with ID "reimb"
             console.log(reimb);
             let row = document.createElement("tr");
-            let cell = document.createElement("td");
-            if (uType == 2) { //if user is a financial manager, add anchor to each reimbId that will enable approve/deny
-                let idLink = document.createElement("button");
-                idLink.addEventListener("click", showUpdate(reimb.reimbId));
-                idLink.innerText = reimb.reimbId;
-                cell.appendChild(idLink);
-            } else {
-                cell.innerText = reimb.reimbId;
-            }
-            row.appendChild(cell);
+
+            let cell1 = document.createElement("td");
+            cell1.innerText = reimb.reimbId;   
+            row.appendChild(cell1);
 
             let cell2 = document.createElement("td");
             cell2.setAttribute("class", "amt");
@@ -264,7 +253,6 @@ async function listReimbFunc() {
                     break;
             }
             row.appendChild(cell7);
-
             reimbBody.appendChild(row);
         }
     } else if (resp.status === 204) {
