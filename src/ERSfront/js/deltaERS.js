@@ -81,6 +81,8 @@ async function logoutFunc() {
         resultText.replaceWith(loginForm);
         document.getElementById("username").setAttribute("value", "");
         document.getElementById("password").setAttribute("value", "");
+        document.getElementById("reimbTable").setAttribute("hidden", true);
+        document.getElementById("requestTable").setAttribute("hidden", true);
         buttonDiv.innerHTML = "";
     } else {
         resultText.innerText = "Logout failed";
@@ -107,30 +109,30 @@ async function showUpdate(id) {
     reimbBody.innerHTML = "";
     let cell = document.createElement("td");
     let row = document.createElement("tr");
-    cell.innerHTML = data.amt;
+    cell.innerText = currentReimb.amt;
     row.appendChild(cell);
     let cell2 = document.createElement("td");
-    cell2.innerHTML = data.desc;
+    cell2.innerText = currentReimb.desc;
     row.appendChild(cell2);
     let cell3 = document.createElement("td");
-    cell3.innerHTML = data.submittedDate;
+    cell3.innerText = currentReimb.submittedDate;
     row.appendChild(cell3);
     let cell4 = document.createElement("td");
-    cell4.innerHTML = data.author;
+    cell4.innerText = currentReimb.author;
     row.appendChild(cell4);
     let cell6 = document.createElement("td");
-    switch (data.typeId) {
+    switch (currentReimb.typeId) {
         case 1:
-            cell6.innerHTML = "Lodging";
+            cell6.innerText = "Lodging";
             break;
         case 2:
-            cell6.innerHTML = "Travel";
+            cell6.innerText = "Travel";
             break;
         case 3:
-            cell6.innerHTML = "Food";
+            cell6.innerText = "Food";
             break;
         case 4:
-            cell6.innerHTML = "Other";
+            cell6.innerText = "Other";
             break;
     }
     row.appendChild(cell6);
@@ -145,10 +147,10 @@ async function showUpdate(id) {
         cell7.appendChild(deny);
         row.appendChild(cell7);
     } else {
-        if (data.statusId == 2) {
-            cell7.innerHTML = "Approved";
+        if (currentReimb.statusId == 2) {
+            cell7.innerText = "Approved";
         } else {
-            cell7.innerHTML = "Denied";
+            cell7.innerText = "Denied";
         }
     }
     //show record
@@ -156,10 +158,15 @@ async function showUpdate(id) {
 }
 
 async function createReimbFunc() {
-    let rAmt = document.getElementById("amt").value;
-    let rDesc = document.getElementById("desc").value;
+    let amtInput = document.getElementById("amt");
+    let rAmt = amtInput.value;
+    let descInput = document.getElementById("desc");
+    let rDesc = descInput.value;
     let typeList = document.getElementById("type");
     let rType = typeList.options[typeList.selectedIndex].value;
+
+    amtInput.setAttribute("value", "");
+    descInput.setAttribute("value", "");
 
     let reimb = {
         amt: rAmt,
@@ -199,61 +206,61 @@ async function listReimbFunc() {
             console.log(reimb);
             let row = document.createElement("tr");
             let cell = document.createElement("td");
-
             if (uType == 2) { //if user is a financial manager, add anchor to each reimbId that will enable approve/deny
-                let idLink = document.createElement("a");
+                let idLink = document.createElement("button");
                 idLink.addEventListener("click", showUpdate(reimb.reimbId));
+                idLink.innerText = reimb.reimbId;
                 cell.appendChild(idLink);
             } else {
-                cell.innerHTML = reimb.reimbId;
+                cell.innerText = reimb.reimbId;
             }
             row.appendChild(cell);
 
             let cell2 = document.createElement("td");
             cell2.setAttribute("class", "amt");
-            cell2.innerHTML = reimb.amt;
+            cell2.innerText = reimb.amt;
             row.appendChild(cell2);
 
             let cell3 = document.createElement("td");
             cell3.setAttribute("class", "desc");
-            cell3.innerHTML = reimb.desc;
+            cell3.innerText = reimb.desc;
             row.appendChild(cell3);
 
             let cell4 = document.createElement("td");
             switch (reimb.typeId) {
                 case 1:
-                    cell4.innerHTML = "Lodging";
+                    cell4.innerText = "Lodging";
                     break;
                 case 2:
-                    cell4.innerHTML = "Travel";
+                    cell4.innerText = "Travel";
                     break;
                 case 3:
-                    cell4.innerHTML = "Food";
+                    cell4.innerText = "Food";
                     break;
                 case 4:
-                    cell4.innerHTML = "Other";
+                    cell4.innerText = "Other";
                     break;
             }
             row.appendChild(cell4);
 
             let cell5 = document.createElement("td");
-            cell5.innerHTML = reimb.submittedDate;
+            cell5.innerText = reimb.submittedDate;
             row.appendChild(cell5);
 
             let cell6 = document.createElement("td");
-            cell6.innerHTML = reimb.author;
+            cell6.innerText = reimb.author;
             row.appendChild(cell6);
 
             let cell7 = document.createElement("td");
             switch (reimb.statusId) {
                 case 1:
-                    cell7.innerHTML = "Pending";
+                    cell7.innerText = "Pending";
                     break;
                 case 2:
-                    cell7.innerHTML = "Approved";
+                    cell7.innerText = "Approved";
                     break;
                 case 3:
-                    cell7.innerHTML = "Denied";
+                    cell7.innerText = "Denied";
                     break;
             }
             row.appendChild(cell7);

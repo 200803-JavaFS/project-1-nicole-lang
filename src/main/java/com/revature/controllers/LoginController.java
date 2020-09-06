@@ -45,9 +45,16 @@ public class LoginController {
 				}
 					
 			}else
+			{
 				res.setStatus(404);
+				res.getWriter().println("User " + l.username + " not found");
+			}
+			
 		}else
+		{
 			res.setStatus(400);
+			res.getWriter().println("Error: cannot login without supplying credentials");
+		}
 
 	}
 

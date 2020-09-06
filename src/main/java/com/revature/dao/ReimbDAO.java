@@ -1,8 +1,9 @@
 package com.revature.dao;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
+
+import org.hibernate.query.Query;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -83,17 +84,21 @@ public interface ReimbDAO {
 	
 	@SuppressWarnings("unchecked")
 	public static List<Reimb> findAll() {
+		System.out.println("In findAll");
 		//return all reimbursement records, sorted by status (pending first)
 		Session ses = HibernateUtil.getSession();		
 		return ses.createQuery("FROM Reimb ORDER BY status ASC").list();
 	}
 
 	@SuppressWarnings("unchecked")
-	public static List<Reimb> selectByUserName(String userName) {
+	public static List<Reimb> selectByUserName(String author) {
+		System.out.println("In selectByUserName");
 		//return all reimbursements submitted by the current user; for employees
 		Session ses = HibernateUtil.getSession();
-		User u = UserDAO.selectByUsername(userName);		
-		return ses.createQuery("FROM Reimb WHERE author = " + u.getUserID()).list();
+		User u = UserDAO.selectByUsername(author);
+		Query<Reimb> q = ses.createQuery("FROM Reimb WHERE author.userID = :id");
+		q.setParameter("id", u.getUserID());
+		return q.list();
 	}
 	public static ReimbType getType(int id) {
 		//return type object based on id received from json

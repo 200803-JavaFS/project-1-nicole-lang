@@ -41,24 +41,30 @@ public class ReimbController {
 			rDTO.author = r.getAuthor().getUserName();
 			rDTO.desc = r.getDesc();
 			rDTO.reimbId = id;
-			rDTO.resolver = r.getResolver().getUserName();
-			rDTO.submittedDate = r.getSubmittedDate();
-			rDTO.resolvedDate = r.getResolvedDate();
+			try{
+				rDTO.resolver = r.getResolver().getUserName();
+				rDTO.resolvedDate = r.getResolvedDate().toString();
+			}catch(NullPointerException e) {
+				rDTO.resolver = null;
+				rDTO.resolvedDate = null;
+			}
+			rDTO.submittedDate = r.getSubmittedDate().toString();
 			rDTO.statusId = r.getStatus().getId();
 			rDTO.typeId = r.getType().getTypeID();
 			String json = om.writeValueAsString(rDTO);
+			res.setStatus(200);
 			res.getWriter().println(json);
 		}else
 			res.setStatus(403); //access denied
 	}
 	public void listRecords(HttpServletRequest req, HttpServletResponse res) throws Exception{
 		List<Reimb> result;
-		List<ReimbDTO> finalResult = new ArrayList<ReimbDTO>();
+		List<ReimbDTO> finalResult = new ArrayList<>();
 		ReimbDTO rDTO;
 		HttpSession ses = req.getSession();
 		LoginDTO l = (LoginDTO) ses.getAttribute("user");
-		int roleID = UserDAO.selectByUsername(l.username).getUserID();
-		switch(roleID)
+		System.out.println("User type: " + l.typeID);
+		switch(l.typeID)
 		{
 		case 2: //Manager
 			result = rs.getAll();
@@ -72,22 +78,32 @@ public class ReimbController {
 			for(Reimb r : result) {
 				//write ReimbDTO entries for each reimbursement returned
 				rDTO = new ReimbDTO();
-				rDTO.reimbId = roleID;
+				rDTO.reimbId = r.getReimbID();
 				rDTO.amt = r.getAmt();
 				rDTO.author = r.getAuthor().getUserName();
 				rDTO.desc = r.getDesc();
-				rDTO.resolver = r.getResolver().getUserName();
-				rDTO.submittedDate = r.getSubmittedDate();
-				rDTO.resolvedDate = r.getResolvedDate();
+				try{
+					rDTO.resolver = r.getResolver().getUserName();
+					rDTO.resolvedDate = r.getResolvedDate().toString();
+				}catch(NullPointerException e) {
+					rDTO.resolver = null;
+					rDTO.resolvedDate = null;
+				}
+				rDTO.submittedDate = r.getSubmittedDate().toString();
 				rDTO.statusId = r.getStatus().getId();
 				rDTO.typeId = r.getType().getTypeID();
 				finalResult.add(rDTO);
 			}
 			//write final result as json
 			String json = om.writeValueAsString(finalResult);
+			System.out.println(json);
 			if(finalResult.isEmpty())
 				res.setStatus(204); //no content
-			res.getWriter().println(json);
+			else {
+				res.setStatus(200);
+				res.getWriter().println(json);
+			}
+				
 	}
 	public boolean addReimb(String body) throws IOException{
 		ReimbDTO r = om.readValue(body, ReimbDTO.class);

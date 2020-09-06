@@ -23,9 +23,4 @@ public interface UserDAO {
 			return null;
 		}
 	}
-	@SuppressWarnings("unchecked")
-	public static List<User> findAll() {
-		Session ses = HibernateUtil.getSession();			
-		return ses.createQuery("FROM User").list();
-	}
 }
