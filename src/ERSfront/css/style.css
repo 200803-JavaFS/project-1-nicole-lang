@@ -79,3 +79,8 @@ thead{
 {
     color: maroon;
 }
+#approve, #deny{
+    font-size: 24pt;
+    text-decoration: none;
+    border: 1px solid black;
+}

@@ -9,6 +9,7 @@ var usern;
 var currentReimb;
 var newStatus;
 var uType;
+var userExists = false;
 async function loginFunc() {
 
     if (!document.getElementById("result") == null) {
@@ -60,6 +61,7 @@ async function loginFunc() {
         popup.removeAttribute("hidden");
         document.getElementById("popupText").innerHTML = "Incorrect Password";
         document.getElementById("closePopup").addEventListener("click", closePopup);
+        userExists = true;
     } else {
         popup.removeAttribute("hidden");
         document.getElementById("popupText").innerHTML = "User " + usern + " does not exist";
@@ -69,8 +71,19 @@ async function loginFunc() {
 }
 
 function closePopup() {
-    popup.setAttribute("hidden", true);
+    
+    
     resultText.replaceWith(loginForm);
+    if(userExists){
+        //keep username input entered but clear the password field
+        let passwordInput = document.getElementById("password");
+        passwordInput.value = "";
+        passwordInput.focus();
+        popup.setAttribute("hidden", true);
+    }else{
+        location.reload();
+    }
+    
 }
 async function logoutFunc() {
     let resp = await fetch(url + "logout", {
@@ -90,11 +103,22 @@ function showForm() {
     createReimb.setAttribute("hidden", true);
     let submitRequest = document.getElementById("submitRequest");
     submitRequest.addEventListener("click", createReimbFunc);
+    let logoutBtn = document.getElementById("logout");
+
+    //provide a button that returns to the list (cancelling update/add); insert before logout button
+    let returnBtn = document.createElement("button");
+    returnBtn.setAttribute("id", "returnBtn");
+    returnBtn.innerText = "Cancel";
+    returnBtn.addEventListener("click", listReimbFunc);
+    buttonDiv.removeChild(logoutBtn);
+    buttonDiv.appendChild(returnBtn);
+    buttonDiv.appendChild(logoutBtn);
 }
 
-async function showUpdate() {
+async function showUpdate(e) {
     //focuses on a single reimbursement in the list and allows update if it is a pending request
-    resp = await fetch(url + "reimb/" + currentReimb.reimbId, {
+    curId = e.getAttribute("id");
+    resp = await fetch(url + "reimb/" + curId, {
         method: "GET",
         credentials: 'include'
     })
@@ -144,12 +168,24 @@ async function showUpdate() {
 
     //provide buttons for approve/deny
     let ucell6 = document.createElement("td");
-    ucell6.innerHTML = '<a id = "approve" href = "javascript:void(0)" onClick = "approveReimbFunc()">&#10003</a>' +
-                        '&nbsp;<a id = "deny" href = "javascript:void(0)" onClick = "denyReimbFunc()">X</a>';
+    ucell6.innerHTML = '<a id = "approve" href = "javascript:void(0)" onClick = "approveReimbFunc()">&nbsp;&#10003&nbsp;</a>' +
+                        '&nbsp;<a id = "deny" href = "javascript:void(0)" onClick = "denyReimbFunc()">&nbsp;X&nbsp;</a>';
     urow.appendChild(ucell6);
 
+    let rd = document.getElementById("resolveDate");
+    rd.setAttribute("hidden", true);
     //show record
     reimbBody.appendChild(urow);
+    let logoutBtn = document.getElementById("logout");
+
+    //provide a button that returns to the list (cancelling update); insert before logout button
+    let returnBtn = document.createElement("button");
+    returnBtn.setAttribute("id", "returnBtn");
+    returnBtn.innerText = "Cancel";
+    returnBtn.addEventListener("click", listReimbFunc);
+    buttonDiv.removeChild(logoutBtn);
+    buttonDiv.appendChild(returnBtn);
+    buttonDiv.appendChild(logoutBtn);
 }
 
 async function createReimbFunc() {
@@ -185,6 +221,23 @@ async function createReimbFunc() {
     }
 }
 async function listReimbFunc() {
+    if(document.getElementById("returnBtn")!= null)
+    {
+        document.getElementById("requestTable").setAttribute("hidden", true);
+        let returnBtn = document.getElementById("returnBtn");
+        buttonDiv.removeChild(returnBtn);
+        if(uType == 1){
+            let logoutBtn = document.getElementById("logout");
+            buttonDiv.removeChild(logoutBtn);
+            createReimb.removeAttribute("hidden");
+            buttonDiv.appendChild(createReimb);
+            buttonDiv.appendChild(logoutBtn);
+        }
+    }
+    let rd = document.getElementById("resolveDate");
+    if(rd.getAttribute("hidden") != null)
+        rd.removeAttribute("hidden");
+
     resp = await fetch(url + "reimb", {
         method: "GET",
         credentials: 'include'
@@ -200,7 +253,6 @@ async function listReimbFunc() {
             //insert list of reimbursements into the tbody element with ID "reimb"
             console.log(reimb);
             let row = document.createElement("tr");
-
             let cell1 = document.createElement("td");
             cell1.innerText = reimb.reimbId;   
             row.appendChild(cell1);
@@ -240,22 +292,33 @@ async function listReimbFunc() {
             cell6.innerText = reimb.author;
             row.appendChild(cell6);
 
-            let cell7 = document.createElement("td");
+            let cell7 = document.createElement("td"); 
             switch (reimb.statusId) {
                 case 1:
-                    cell7.innerHTML = '<a id="updateLink" href = "javascript:void(0)" onClick = "showUpdate()">Pending</a>';
-                    currentReimb = reimb;
-                    row.appendChild(cell7);
+                    if(uType == 2){//add update link to the status field if current user is a financial manager
+                        cell7.innerHTML = '<a id = "' + reimb.reimbId + '" href = "javascript:void(0)" onClick = "showUpdate(this)">Pending</a>';
+                    }
+                    else{//employees should not be able to change their reimbursement status
+                        cell7.innerText = "Pending";
+                    }                  
                     break;
                 case 2:
                     cell7.innerText = "Approved";
-                    row.appendChild(cell7);
                     break;
                 case 3:
                     cell7.innerText = "Denied";
-                    row.appendChild(cell7);
                     break;
             }
+            row.appendChild(cell7);
+
+            let cell8 = document.createElement("td");
+            //show resolved date if available
+            if(reimb.resolvedDate != null){
+                cell8.innerText = reimb.resolvedDate + " (by " + reimb.resolver + ")";
+            }  
+            row.appendChild(cell8);
+
+            
             reimbBody.appendChild(row);
         }
     } else if (resp.status === 204) {
