@@ -3,3 +3,9 @@
 2020-09-07 21:21:47 INFO  ReimbDAO:79 - Reimbursement request 1 Approved by nlang
 2020-09-08 11:49:16 INFO  ReimbDAO:52 - New reimbursement request added by user gattietime
 2020-09-08 11:49:16 DEBUG ReimbDAO:60 - Test reimbursement request deleted
+2020-09-08 14:20:42 INFO  ReimbDAO:52 - New reimbursement request added by user jdoe
+2020-09-08 14:20:42 DEBUG ReimbDAO:60 - Test reimbursement request deleted
+2020-09-08 14:22:16 INFO  ReimbDAO:83 - Reimbursement request 5 Denied by nlang
+2020-09-08 14:22:23 INFO  ReimbDAO:83 - Reimbursement request 11 Approved by nlang
+2020-09-08 14:23:14 INFO  ReimbDAO:52 - New reimbursement request added by user gattietime
+2020-09-08 14:23:14 DEBUG ReimbDAO:60 - Test reimbursement request deleted

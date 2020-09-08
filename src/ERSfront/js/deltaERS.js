@@ -71,19 +71,21 @@ async function loginFunc() {
         popup.removeAttribute("hidden");
         document.getElementById("popupText").innerHTML = "User " + usern + " does not exist";
         document.getElementById("closePopup").addEventListener("click", closePopup);
-        resultText.replaceWith(loginForm);
+        resultText.innerText = "Failed to log in";
+        loginForm.replaceWith(resultText);
+        userExists = false;
     }
 }
 
 function closePopup() {
     //runs when popup OK button is clicked
-    resultText.replaceWith(loginForm);
     if(userExists){
         //keep username input entered but clear the password field
         let passwordInput = document.getElementById("password");
         passwordInput.value = "";
         passwordInput.focus();
         popup.setAttribute("hidden", true);
+        resultText.replaceWith(loginForm);
     }else{
         location.reload();
     }
