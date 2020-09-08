@@ -30,6 +30,7 @@ public class Reimb implements Serializable{
 	private int reimbID;	
 	@Column(name="reimb_amount")
 	private double amt;
+	//automatically adds a timestamp when a record is created
 	@CreationTimestamp
 	@Column(name="reimb_submitted")
 	private Timestamp submittedDate;

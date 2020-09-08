@@ -1,0 +1,7 @@
+-Managers-
+nlang: 82798
+gattietime: 09876
+
+-Employees-
+hkendrick: 12345
+jdoe: password

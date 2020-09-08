@@ -5,6 +5,7 @@ import com.revature.models.User;
 import com.revature.dao.UserDAO;
 public class LoginService implements UserDAO{
 	
+	//Service class for user login
 	public boolean login(LoginDTO l) throws Exception
 	{
 		//log in as an existing user; returns a boolean

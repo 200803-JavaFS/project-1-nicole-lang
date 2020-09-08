@@ -17,6 +17,8 @@ import com.revature.service.ReimbService;
 
 public class ReimbController {
 
+	//controller class for retrieving and adding reimbursements
+	
 	private static ReimbService rs = new ReimbService();
 	private static ObjectMapper om = new ObjectMapper();
 

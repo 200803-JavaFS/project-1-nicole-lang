@@ -13,6 +13,7 @@ import com.revature.service.LoginService;
 
 public class LoginController {
 
+	//controller class for user login/logout
 	private static LoginService ls = new LoginService();
 	private static ObjectMapper om = new ObjectMapper();
 

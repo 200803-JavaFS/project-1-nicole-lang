@@ -60,6 +60,7 @@ public class ReimbServiceTest {
 
 	@Test
 	public void testAddReimb() {
+		System.out.println("Testing add reimbursement");
 		Session ses = HibernateUtil.getSession();
 		ReimbDTO rDTO = new ReimbDTO();
 		rDTO.amt = 100;

@@ -1,5 +1,6 @@
 const url = "http://localhost:8080/project1/";
 document.getElementById("submit").addEventListener("click", loginFunc);
+//declare global variables
 var loginForm = document.getElementById("login");
 var buttonDiv = document.getElementById("buttons");
 var popup = document.getElementById("popup");
@@ -10,8 +11,9 @@ var currentReimb;
 var newStatus;
 var uType;
 var userExists = false;
-async function loginFunc() {
 
+async function loginFunc() {
+//get user input and do login POST
     if (!document.getElementById("result") == null) {
         resultText = document.getElementById("result");
     } else {
@@ -51,6 +53,7 @@ async function loginFunc() {
             createReimb.innerText = "New Request";
             buttonDiv.appendChild(createReimb);
         }
+        //show logout button
         let logout = document.createElement("button");
         logout.setAttribute("id", "logout");
         logout.innerText = "Log out";
@@ -58,11 +61,13 @@ async function loginFunc() {
         buttonDiv.appendChild(logout);
 
     } else if (resp.status === 403) {
+        //wrong password
         popup.removeAttribute("hidden");
         document.getElementById("popupText").innerHTML = "Incorrect Password";
         document.getElementById("closePopup").addEventListener("click", closePopup);
         userExists = true;
     } else {
+        //wrong username
         popup.removeAttribute("hidden");
         document.getElementById("popupText").innerHTML = "User " + usern + " does not exist";
         document.getElementById("closePopup").addEventListener("click", closePopup);
@@ -71,8 +76,7 @@ async function loginFunc() {
 }
 
 function closePopup() {
-    
-    
+    //runs when popup OK button is clicked
     resultText.replaceWith(loginForm);
     if(userExists){
         //keep username input entered but clear the password field
@@ -86,6 +90,7 @@ function closePopup() {
     
 }
 async function logoutFunc() {
+    //do logout POST (clear session variables)
     let resp = await fetch(url + "logout", {
         method: "POST",
         credentials: "include"
@@ -98,6 +103,7 @@ async function logoutFunc() {
 }
 
 function showForm() {
+    //show form for adding new request
     resultText.innerText = "";
     document.getElementById("requestTable").removeAttribute("hidden");
     createReimb.setAttribute("hidden", true);
@@ -105,25 +111,20 @@ function showForm() {
     submitRequest.addEventListener("click", createReimbFunc);
     let logoutBtn = document.getElementById("logout");
 
-    //provide a button that returns to the list (cancelling update/add); insert before logout button
-    let returnBtn = document.createElement("button");
-    returnBtn.setAttribute("id", "returnBtn");
-    returnBtn.innerText = "Cancel";
-    returnBtn.addEventListener("click", listReimbFunc);
-    buttonDiv.removeChild(logoutBtn);
-    buttonDiv.appendChild(returnBtn);
-    buttonDiv.appendChild(logoutBtn);
+    showReturn();
 }
 
 async function showUpdate(e) {
     //focuses on a single reimbursement in the list and allows update if it is a pending request
     curId = e.getAttribute("id");
+    //do 'reimb/#' GET
     resp = await fetch(url + "reimb/" + curId, {
         method: "GET",
         credentials: 'include'
     })
     currentReimb = await resp.json();
 
+    //build update form table
     let reimbBody = document.getElementById("reimb");
     reimbBody.innerHTML = "";
 
@@ -178,8 +179,13 @@ async function showUpdate(e) {
     reimbBody.appendChild(urow);
     let logoutBtn = document.getElementById("logout");
 
+    showReturn();
+}
+
+function showReturn(){
     //provide a button that returns to the list (cancelling update); insert before logout button
     let returnBtn = document.createElement("button");
+    let logoutBtn = document.getElementById("logout");
     returnBtn.setAttribute("id", "returnBtn");
     returnBtn.innerText = "Cancel";
     returnBtn.addEventListener("click", listReimbFunc);
@@ -189,6 +195,7 @@ async function showUpdate(e) {
 }
 
 async function createReimbFunc() {
+    //get user input and do reimb(create) POST
     let amtInput = document.getElementById("amt");
     let rAmt = amtInput.value;
     let descInput = document.getElementById("desc");
@@ -221,6 +228,7 @@ async function createReimbFunc() {
     }
 }
 async function listReimbFunc() {
+    //hide/show elements based on current context
     if(document.getElementById("returnBtn")!= null)
     {
         document.getElementById("requestTable").setAttribute("hidden", true);
@@ -238,6 +246,7 @@ async function listReimbFunc() {
     if(rd.getAttribute("hidden") != null)
         rd.removeAttribute("hidden");
 
+    //do reimb(list) GET
     resp = await fetch(url + "reimb", {
         method: "GET",
         credentials: 'include'
@@ -322,6 +331,7 @@ async function listReimbFunc() {
             reimbBody.appendChild(row);
         }
     } else if (resp.status === 204) {
+        //it's possible to have no viewable reimbursements
         resultText.innerText = "No reimbursements found!"
     }
 }
@@ -333,7 +343,9 @@ function approveReimbFunc() {
 function denyReimbFunc() {
     updateReimbFunc(3);
 }
+
 async function updateReimbFunc(newStatus) {
+    //get needed data and do reimb PUT
     let reimb = {
         reimbId: currentReimb.reimbId,
         statusId: newStatus,

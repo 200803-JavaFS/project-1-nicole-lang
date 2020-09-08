@@ -13,6 +13,7 @@ public class CryptoService {
 	public static final String alg = "AES";
 	public static final String keyHex = "1f6Ba8742ccc6ff94ddc3db0b90fC862";
 
+	//encrypt was only used for adding users with their encrypted passwords; it is not implemented in the application flow
 	public String encrypt(String password) throws Exception {
 		SecretKey key = loadKey();
 		

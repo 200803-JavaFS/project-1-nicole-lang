@@ -12,12 +12,15 @@ import com.revature.controllers.LoginController;
 import com.revature.controllers.ReimbController;
 
 public class MasterServlet extends HttpServlet {
-
+	
+	//master servlet class; handles all HTTP requests from the client
+	
 	private static final long serialVersionUID = 1L;
 	private static LoginController lc = new LoginController();
 	private static ReimbController rc = new ReimbController();
 
 	public MasterServlet() {
+		//call HTTPServlet constructor
 		super();
 	}
 
@@ -35,11 +38,9 @@ public class MasterServlet extends HttpServlet {
 		System.out.println(Arrays.toString(portions));
 
 		// get can retrieve one of the following:
-		// 1: a list of reimbursement requests submitted by the logged-in employee,
-		// either pending or resolved (separate these into two lists)
-		// 2: a list of all reimbursement requests (for managers) ordered by submission
-		// date
-		// 3: a single reimbursement record (reimb/#)
+		// 1: a list of reimbursement requests submitted by the logged-in employee
+		// 2: a list of all reimbursement requests (for managers) ordered by status (pending first)
+		// 3: a single reimbursement record (reimb/#), for update form
 
 		if (portions[0].equals("reimb")) {
 			if (req.getSession(false) != null) {
@@ -83,8 +84,8 @@ public class MasterServlet extends HttpServlet {
 			line = reader.readLine();
 		}
 		String body = new String(sb);
-		// post will be used for
-		// 1: login
+		// post is used for
+		// 1: login/logout
 		// 2: adding new reimbursement requests
 		// tomcat sends a success code by default if it finds a servlet method so we
 		// need to set the status explicitly
@@ -121,7 +122,7 @@ public class MasterServlet extends HttpServlet {
 
 	@Override
 	protected void doPut(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-		// put will be used to update a reimbursement's status, resolver, and resolve date
+		// put is used to update a reimbursement's status, resolver, and resolve date
 		// status will be set to either 2 (Approved) or 3 (Denied)
 		final String URI = req.getRequestURI().replace("/project1/", "");
 		System.out.println(URI);

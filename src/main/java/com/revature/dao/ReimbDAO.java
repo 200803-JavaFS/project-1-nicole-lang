@@ -54,7 +54,11 @@ public interface ReimbDAO {
 			//only commit if not unit testing
 			tx.commit();
 		else
+		{
 			tx.rollback();
+			logMessage = "Test reimbursement request deleted";
+			log.debug(logMessage);
+		}
 		return true;
 	}
 	
@@ -106,7 +110,7 @@ public interface ReimbDAO {
 		//return all reimbursements submitted by the current user; for employees
 		Session ses = HibernateUtil.getSession();
 		User u = UserDAO.selectByUsername(author);
-		Query<Reimb> q = ses.createQuery("FROM Reimb WHERE author.userID = :id");
+		Query<Reimb> q = ses.createQuery("FROM Reimb WHERE author.userID = :id ORDER BY reimbID ASC");
 		q.setParameter("id", u.getUserID());
 		return q.list();
 	}

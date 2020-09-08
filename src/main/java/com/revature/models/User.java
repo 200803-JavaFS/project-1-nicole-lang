@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @Table(name="ers_users")
 public class User implements Serializable{
 
-	//User model
+	//User model; used for login and reimb author/resolver
 	private static final long serialVersionUID = 1L;
 	
 	@Id

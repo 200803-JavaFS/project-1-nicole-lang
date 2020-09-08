@@ -9,6 +9,7 @@ import com.revature.models.ReimbDTO;
 
 public class ReimbService implements ReimbDAO, UserDAO{
 	
+	//service class for reimbursement handling
 	public Reimb getByID(int id) {
 		return ReimbDAO.selectById(id);
 	}

@@ -10,6 +10,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name="ers_reimbursement_type")
 public class ReimbType {
+	//Type codes: 1 = Lodging, 2 = Travel, 3 = Food, 4 = Other
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="reimb_type_id")

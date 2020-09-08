@@ -7,6 +7,8 @@ import com.revature.models.User;
 import com.revature.utils.HibernateUtil;
 
 public interface UserDAO {
+	//User DAO methods to retrieve a user record based on either ID or username
+	
 	public static User selectById(int id) {
 		Session ses = HibernateUtil.getSession();		
 		return ses.get(User.class, id);
