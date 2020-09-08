@@ -15,13 +15,9 @@ public class CryptoTest {
 	@Test
 	public void testEncryptDecrypt() throws Exception {
 		System.out.println("Testing CryptoService...");
-		String password = "82798";
-		String encPass = cs.encrypt(password);
-		assertEquals(password, encPass);
-		System.out.println("Encryption test successful");
 		
-		String decPass = cs.decrypt(encPass);
-		assertEquals(password, decPass);
+		String decPass = cs.decrypt("ECitg4YwLuqAsmAeUGOZhA==");
+		assertEquals(decPass, "password");
 		System.out.println("Decryption test successful");
 	}
 }

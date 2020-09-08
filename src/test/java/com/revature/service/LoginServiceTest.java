@@ -16,9 +16,10 @@ public class LoginServiceTest {
 	public static LoginDTO login;
 	
 	@BeforeClass
-	public void init() {
+	public static void init() {
 		System.out.println("Initiating LoginService tests");
 		ls = new LoginService();
+		login = new LoginDTO();
 	}
 	@Test
 	public void testGetUser() {
@@ -26,8 +27,7 @@ public class LoginServiceTest {
 		User u = ls.getUser(goodUN);
 		assertEquals(goodUN, u.getUserName());
 		System.out.println("Valid username test successful");
-		u = ls.getUser(badUN);
-		assertNotEquals(badUN, u.getUserName());
+		assertEquals(ls.getUser(badUN), null);
 		System.out.println("Invalid username test successful");
 		System.out.println("getUser tests successful");
 	}
